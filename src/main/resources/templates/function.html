@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>功能管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	
+		    <div class="content-wrapper">
+		        <div class="main-content">
+		            <div class="main-title">
+		                <span class="title-text" id="showtitle">功能管理</span>
+		            </div>
+		
+					<!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+		            <div class="search-block">
+		                <div class="search-block-line">
+		                    <div>
+		                        <label>
+		                            <span class="text" >功能名稱：</span>
+		                            <input type="text" id="functionName" name="functionName">
+		                        </label>
+		                        &nbsp;&nbsp;&nbsp;
+		                        <label>
+		                            <span class="text" >顯示名稱：</span>
+		                            <input type="text" id="functionShowName" name="functionShowName">
+		                        </label>
+		                         &nbsp;&nbsp;&nbsp;
+		                        <label>
+		                            <span class="text">功能路徑：</span>
+		                            <input type="text" id="functionUrl" name="functionUrl">
+		                        </label>
+		                    </div>
+		                </div>
+		                 <div class="search-block-line">
+		                    <div>
+		                        <label>
+		                            <span class="text">群　　組：</span>
+		                            <select id="functionGroup" name="functionGroup">
+		                            	<option value="" selected></option>
+		                            	<option value="0">主選單</option>
+		                            	<option value="1">副選單</option>
+									</select>
+		                        </label>
+		                        &nbsp;&nbsp;&nbsp;
+		                        <label>
+		                            <span class="text">分　　類：</span>
+		                            <select id="type" name="type">
+		                            	<option value="" selected></option>
+									    <option th:each="functionGroup, status : ${functions}" th:value="${functionGroup.value[0].type}" th:text="${functionGroup.value[0].functionShowName}">業務</option>
+									</select>
+		                        </label>
+		                        &nbsp;&nbsp;&nbsp;
+		                        <label>
+		                            <span class="text">啟　　用：</span>
+		                            <select id="enabled" name="enabled">
+									    <option value="" selected></option>
+									    <option value="0">不啟用</option>
+									    <option value="1">啟用</option>
+									</select>
+		                        </label>
+		                    </div>
+		                </div>
+		                <div class="search-block-line btnventer">
+		                    <div class="btn searchbtn newbtn-gray" onclick="doClear();">清除</div>
+		                    &nbsp;&nbsp;
+		                    <div class="btn searchbtn newbtn-yellow" onclick="doquery();">搜尋</div>
+		                    &nbsp;&nbsp;
+		                    <div class="btn searchbtn newbtn-blue" onclick="doadd();">新增</div>
+		                </div>
+		            </div>
+		            </form>
+		            <!-- 顯示表格 -->
+	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
+		        </div>
+		    </div>
+		
+			<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="updateModalTitle"></h4>
+						</div>
+						<div class="wordWrap modal-body" id="addDataDiv">
+							<form id="updateForm" name="updateForm" method="POST" th:action="@{/function/save}">
+					            <input type="hidden" id="_method" name="_method" value="PUT" />
+					            <input type="hidden" id="createTime" name="createTime"/>
+					            <input type="hidden" id="createUser" name="createUser"/>
+					            
+					            <div class="search-block">
+					            	<div class="search-block-line controlhidden" id="functionIddvi" >
+				                        <label>
+				                            <span class="text" >索　　引：</span>
+				                            <input type="text" class="modal-readonly" id="updateFunctionId" name="functionId" readonly="readonly">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >功能名稱：</span>
+				                            <input type="text" id="updateFunctionName" name="functionName">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >顯示名稱：</span>
+				                            <input type="text" id="updateFunctionShowName" name="functionShowName" maxlength="20">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">功能路徑：</span>
+				                            <input type="text" id="updateFunctionUrl" name="functionUrl">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                        <label>
+					                            <span class="text">排　　序：</span>
+					                            <input type="number" id="updateSort" name="functionSort">
+					                        </label>
+					                    </div>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                        <label>
+					                            <span class="text">群　　組：</span>
+					                            <select id="updateFunctionGroup" name="functionGroup" onchange="setTypeShow();">
+												   	<option value="0">主選單</option>
+		                            				<option value="1">子選單</option>
+												</select>
+					                        </label>
+					                    </div>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                    	<label  id="updateTypeDiv">
+					                            <span class="text">分　　類：</span>
+					                            <select id="updatetype" name="type">
+												    <option th:each="functionType : ${selectFunctionType}" th:value="${functionType.id}" th:text="${functionType.name}">業務</option>
+												</select>
+					                        </label>
+					                    </div>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                        <label>
+					                            <span class="text">啟　　用：</span>
+					                            <input type="checkbox" id="updateEnabled" name="enabled">
+					                        </label>
+					                    </div>
+					                </div>
+					            </div>
+							</form>
+							<div class="error" id="error"></div>
+						</div>
+						<div class="modal-footer">
+						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
+							<!--  &nbsp;&nbsp;
+							<button type="button" id="deleteConfirmbtn" class="btn btn-primary" onclick="dodelete();">刪除</button>-->
+							&nbsp;&nbsp;
+							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+		</div>
+		<!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+			
+			var selectType = /*[[${selectFunctionType}]]*/'';
+			var selectFunctionGroups = [
+			        { id: "0", name: "主選單" },
+			        { id: "1", name: "子選單" }
+			    ];
+			
+			$(document).ready(function() {
+				doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+			});
+		
+			function doadd() {
+				doClearData();
+				$('#createTime').val(new Date());
+				$('#error').val("");
+				$('#updateModalTitle').val('新增功能資料');
+				$('#functionIddvi').css("display", "none");
+				$('#_method').val('POST');
+				
+				$('#updateModal').modal('show');
+			}
+		
+			function dosave() {
+				$("#updateForm").submit()
+			}
+
+			function doquery() {
+				$("#jsGrid").jsGrid("reset");
+				dojsGrid();
+			}
+		
+			/*function dodelete() {
+				let functionId = document.getElementById("updateFunctionId").value;
+           		$.ajax({
+                       url: '/apiGLFunction/delete',
+                       type: 'DELETE',
+                       data: {
+                           "id": functionId
+                       },
+                       success: function(data) {
+                       	errorMsg("刪除結果", "刪除成功");
+                       	doClearData();
+                       },
+                       error: function(error) {
+                       	errorMsg("錯誤", error.responseJSON.message);
+                       	doClearData();
+                       }
+                   })
+			}*/
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	var requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryFunction', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "functionId", type: "text", width: 40 , title:"索引" },
+						{ name: "functionName", type: "text", width: 120 ,title: "功能名稱"},
+						{ name: "functionShowName", type: "text", width: 120 , title:"顯示名稱" },
+						{ name: "functionUrl", type: "text", width: 120, title:"功能路徑" },
+						{ name: "functionSort", type: "text", width: 40, title:"排序"},
+						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
+						{ name: "functionGroup", type: "select", items: selectFunctionGroups, valueField: "id", textField: "name", width: 60, title:"群組", sorting: false },
+						{ name: "type", type: "select", items: selectType, valueField: "id", textField: "name", width: 60, title:"分類", sorting: false },
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="update-btn-color">').text("編輯")
+				                	.on("click", function() {
+				                		$('#updateFunctionId').val(item.functionId);
+				                		$('#_method').val('PUT');
+				                		$('#updateModalTitle').val('修改功能資料');
+				                		$('#functionIddvi').css("display", "block");
+				                		let funcurl = /*[[@{/function/getFunction/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl  + item.functionId,
+				                		    success: function (data) {
+				                		    	$('#updateFunctionName').val(data["functionName"]);
+						                		$('#updateFunctionShowName').val(data["functionShowName"]);
+						                		$('#updateFunctionUrl').val(data["functionUrl"]);
+						                		$('#updateSort').val(data["functionSort"]);
+						                		$('#updatetype').val(data["type"]);
+						                		let enabledValue = (data["enabled"] == '1' ? true : false);
+						                		$('#updateEnabled').prop('checked', enabledValue);
+						                		$('#updateFunctionGroup').val(data["functionGroup"]);
+						                		let createTime = data["createTime"].toDate("yyyy-mm-dd hh:ii:ss");
+						                		$('#createTime').val(createTime);
+						                		$('#createUser').val(data["createUser"]);
+						                		setTypeShow();
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						}
+					]
+				})
+			}
+		
+			//清除查詢資料
+			function doClear() {
+				$("#jsGrid").jsGrid("reset");
+				doClearData()
+				$("#jsGrid").children().remove();
+			}
+		
+			function doClearData() {
+				$('#functionIddvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				
+				$('#updateFunctionName').val(null);
+        		$('#updateFunctionShowName').val(null);
+        		$('#updateFunctionUrl').val(null);
+        		$('#updateSort').val(null);
+
+        		$('#updatetype option:first').prop('selected', 'selected');
+        		$('#updateEnabled').prop('checked', true);
+        		$('#updateEnabled').val('0');
+        		$('#updateFunctionGroup').prop('checked', true);
+			}
+
+			function checkData() {
+				if (document.getElementById("updateFunctionName").value == '') {
+					document.getElementById("error").innerHTML = "功能名稱不能為空白";
+					return false;
+				}
+				return true;
+			}
+			
+			function setTypeShow() {
+				if($("#updateFunctionGroup").val() == '0') {
+					$("#updateTypeDiv").hide();
+				} else {
+					$("#updateTypeDiv").show();
+				}
+			}
+			
+			/*function setReadonly(readonly) {
+				$("#updateFunctionName").prop('readonly', readonly);
+				$("#updateFunctionUrl").prop('readonly', readonly);
+				if(readonly) {
+					$("#updateFunctionName").addClass('modal-readonly');
+					$("#updateFunctionUrl").addClass('modal-readonly');
+				} else {
+					$("#updateFunctionName").removeClass('modal-readonly');
+					$("#updateFunctionUrl").removeClass('modal-readonly');
+				}
+			}*/
+		</script>
+	</body>
+</html>

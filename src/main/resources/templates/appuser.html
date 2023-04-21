@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>使用者管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        
+	        <div class="content-wrapper">
+		        <div class="main-content">
+					<div class="main-title">
+				        <span class="title-text" id="showtitle">使用者管理</span>
+				    </div>
+				    <!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+			            <div class="search-block">
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >編　　號：</span>
+			                            <input type="number" id="userId" name="userId">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >帳　　號：</span>
+			                            <input type="text" id="account" name="account">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >員工編號：</span>
+			                            <input type="number" id="accountId" name="accountId">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >員工姓名：</span>
+			                            <input type="text" id="name" name="name">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >群　　組：</span>
+			                            <input type="text" id="groupName" name="groupName">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >部　　門：</span>
+			                            <input type="text" id="branch" name="branch">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+		                    <div>
+		                        <label>
+		                            <span class="text">啟　　用：</span>
+		                            <select id="enabled" name="enabled">
+									    <option value="" selected></option>
+									    <option value="0">不啟用</option>
+									    <option value="1">啟用</option>
+									</select>
+		                        </label>
+		                    </div>
+		                </div>
+			                <div class="search-block-line btnventer">
+			                    <div class="btn searchbtn newbtn-gray" onclick="doClear();">清除</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-yellow" onclick="doquery();">搜尋</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-blue" onclick="doadd();">新增</div>
+			                </div>
+			            </div>
+		            </form>
+				    <!-- 顯示表格 -->
+	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="updateModalTitle"></h4>
+						</div>
+						<div class="wordWrap modal-body" id="addDataDiv">
+							<form id="updateForm" name="updateForm" method="POST" th:action="@{/appUser/save}">
+					            <input type="hidden" id="_method" name="_method" value="PUT" />
+					            <input type="hidden" id="createTime" name="createTime"/>
+					            <input type="hidden" id="createUser" name="createUser"/>
+					            
+					            <div class="search-block">
+					            	<div class="search-block-line controlhidden" id="appUserDiv" >
+				                        <label>
+				                            <span class="text" >採購單號：</span>
+				                            <input type="number" class="modal-readonly" id="updateAppUser" name="id" readonly="readonly">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >商品編號：</span>
+				                            <input type="number" id="updateProductId" name="productId">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >商品名稱：</span>
+				                            <input type="text" class="modal-readonly" id="updateProductName" name="productName" value="無此產品編號!!" readonly="readonly">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">採購單價：</span>
+				                            <input type="number" id="updateProductCost" name="productCost">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">採購數量：</span>
+				                            <input type="text" id="updateQuantity" name="quantity">
+				                        </label>
+					                </div>
+					            </div>
+							</form>
+							<div class="error" id="error"></div>
+						</div>
+						<div class="modal-footer">
+						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
+							<!--  &nbsp;&nbsp;
+							<button type="button" id="deleteConfirmbtn" class="btn btn-primary" onclick="dodelete();">刪除</button>-->
+							&nbsp;&nbsp;
+							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+	    </div>
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+		
+			$(document).ready(function() {
+				doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+			});
+			
+			$('#updateProductId').on('change', function(e){  
+				const productId = $('#updateProductId').val();
+				$('#updateProductName').val(getProductName(productId));
+			});
+			
+			function doadd() {
+				doClearData();
+				$('#createTime').val(new Date());
+				setShowItem('ADD');
+				$('#updateModal').modal('show');
+			}
+			
+			function dosave() {
+				if(checkData()) {
+					$('#updateForm').submit();
+				}
+			}
+
+			function doquery() {
+				dojsGrid();
+			}
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryAppUser', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "userId", type: "text", width: 80 , title:"編號" },
+						{ name: "name", type: "text", width: 80 , title:"員工姓名" },
+						{ name: "account", type: "text", width: 80 ,title: "帳號"},
+						{ name: "accountId", type: "text", width: 80 , title:"員工編號" },
+						{ name: "groupName", type: "text", width: 120, title:"群組"},
+						{ name: "branch", type: "text", width: 80, title:"部門" },
+						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="update-btn-color">').text("編輯")
+				                	.on("click", function() {
+				                		$('#updatePurchaseIdId').val(item.id);
+				                		setShowItem('UPDATE');
+				                		const funcurl = /*[[@{/purchase/getPurchase/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl  + item.id,
+				                		    success: function (data) {
+				                		    	$('#updateProductId').val(data["productId"]);
+						                		$('#updateProductCost').val(data["productCost"]);
+						                		$('#updateQuantity').val(data["quantity"]);
+						                		$('#beforeQuantity').val(data["quantity"]);
+						                		let createTime = data["createTime"].toDate("yyyy-mm-dd hh:ii:ss");
+						                		$('#createTime').val(createTime);
+						                		$('#createUser').val(data["createUser"]);
+						                		$('#updateProductName').val(getProductName(data["productId"]));
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						}
+					]
+				})
+			}
+
+			function doClearData() {
+				$('#purchaseIddvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				document.getElementById("updateForm").reset();
+        		
+        		$('#error').text("");
+        		$('#showImageDiv').css("display", "none");
+			}
+
+			function checkData() {
+				const updateProductName = $('#updateProductName').val();
+				console.log(updateProductName);
+				if (updateProductName == "無此產品編號!!") {
+					$('#error').text("請輸入正確的產品編號");
+					return false;
+				}
+				const updateProductCost = $('#updateProductCost').val();
+				if (updateProductCost <= 0 ) {
+					$('#error').text("採購單價需大於0");
+					return false;
+				}
+				const updateQuantity = $('#updateQuantity').val();
+				if (updateQuantity <= 0 ) {
+					$('#error').text("採購數量需大於0");
+					return false;
+				}
+				return true;
+			}
+			
+			function setShowItem(value) {
+				const title = value == "ADD" ? "採購商品訂單" : "修改採購訂單";
+				const addNone = value == "ADD" ? "none" : "inline";
+				const addInline = value == "ADD" ? "inline" : "none";
+				const method = value == "ADD" ? "POST" : "PUT";
+				
+				$('#updateModalTitle').val(title);
+				$('#appUserDiv').css("display", addNone);
+				$('#_method').val(method);
+			}
+			
+			
+	    </script>
+	</body>
+</html>

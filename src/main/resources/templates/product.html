@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>商品資料管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        
+	        <div class="content-wrapper">
+		        <div class="main-content">
+					<div class="main-title">
+				        <span class="title-text" id="showtitle">商品資料管理</span>
+				    </div>
+				    <!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+			            <div class="search-block">
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >商品編號：</span>
+			                            <input type="number" id="productId" name="productId">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >商品名稱：</span>
+			                            <input type="text" id="productName" name="productName">     
+			                        </label>
+			                        &nbsp;&nbsp;&nbsp;
+			                        <label>
+			                            <span class="text" >分　　類：</span>
+			                            <input type="text" id="classify" name="classify">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    	<label>
+			                            <span class="text" >單　　價：</span>
+			                            <input type="number" id="priceStart" name="priceStart"> 
+			                            ~
+			                            <input type="number" id="priceEnd" name="priceEnd"> 
+			                        </label>
+			                </div>
+			                <div class="search-block-line">
+			                    	<label>
+			                            <span class="text" >成　　本：</span>
+			                            <input type="number" id="costStart" name="costStart"> 
+			                            ~
+			                            <input type="number" id="costEnd" name="costEnd"> 
+			                        </label>
+			                </div>
+			                 <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >圖片名稱：</span>
+			                            <input type="text" id="image" name="image"> 
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                        <label>
+			                            <span class="text" >是否啟用：</span>
+			                            <select id="enabled" name="enabled">
+										    <option value="" selected></option>
+										    <option value="0">未啟用</option>
+										    <option value="1">啟用</option>
+										</select>                  
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line btnventer">
+			                    <div class="btn searchbtn newbtn-gray" onclick="doClear();">清除</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-yellow" onclick="doquery();">搜尋</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-blue" onclick="doadd();">新增</div>
+			                </div>
+			            </div>
+		            </form>
+				    <!-- 顯示表格 -->
+	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="updateModalTitle"></h4>
+						</div>
+						<div class="wordWrap modal-body" id="addDataDiv">
+							<form id="updateForm" name="updateForm" method="POST" th:action="@{/product/save}" enctype="multipart/form-data">
+					            <input type="hidden" id="_method" name="_method" value="PUT" />
+					            <input type="hidden" id="stock" name="stock"/>
+					            <input type="hidden" id="createTime" name="createTime"/>
+					            <input type="hidden" id="createUser" name="createUser"/>
+					            <input type="hidden" id="changeImage" name="changeImage"/>
+					            
+					            <div class="search-block">
+					            	<div class="search-block-line controlhidden" id="ProductIddvi" >
+				                        <label>
+				                            <span class="text" >商品編號：</span>
+				                            <input type="text" class="modal-readonly" id="updateProductId" name="productId" readonly="readonly">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >商品名稱：</span>
+				                            <input type="text" id="updateProductName" name="productName">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">單　　價：</span>
+				                            <input type="number" id="updatePrice" name="price">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">成　　本：</span>
+				                            <input type="number" id="updateCost" name="cost">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">單　　位：</span>
+				                            <input type="text" id="updateUnit" name="unit">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">分　　頖：</span>
+				                            <input type="text" id="updateClassify" name="classify">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">啟　　用：</span>
+				                            <input type="checkbox" id="updateEnabled" name="enabled">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                    	<label>
+					                            <span class="text">圖　　片：</span>
+					                            <input type="file" id="uploadFile" name="uploadFile" accept="image/jpeg, image/png">
+							                    <input type="text" class="modal-readonly" id="imageName" name="image" readonly="readonly">
+					                        </label>
+					                        <span class="btn btn-warning" id="imagebtn" onclick="doChangeImage();">更換圖片</span>
+					                    </div>
+					                </div>
+					                <div class="search-block-line">
+					                    <div>
+					                    	<label id="showImageDiv">
+					                            <span class="text">圖片預覽：</span>
+					                            <img id="showImage"/>
+					                        </label>
+					                    </div>
+					                </div>
+					            </div>
+							</form>
+							<div class="error" id="error"></div>
+						</div>
+						<div class="modal-footer">
+						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
+							<!--  &nbsp;&nbsp;
+							<button type="button" id="deleteConfirmbtn" class="btn btn-primary" onclick="dodelete();">刪除</button>-->
+							&nbsp;&nbsp;
+							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+	    </div>
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+		
+			$(document).ready(function() {
+				doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+			});
+			
+			
+			const isFileExists = async (fileName) => {
+				const url = /*[[@{/product/isFileExists/}]]*/'';
+				const respData = await fetch(url + fileName)
+				.then( rs => rs.text())
+				.catch (error => {
+					console.log("FetchError :",error);
+				});
+				return respData
+			};
+			
+			$('#uploadFile').on('change', async function(e){  
+				const file = this.files[0];
+				if(file == undefined) {
+					$('#showImageDiv').css("display", "none");
+					return false;
+				}
+				
+				const fileName = file.name;
+				//確認副檔名
+				if (checkfileSubName(fileName)) {
+				    return false;
+				}
+				//確認server檔案是否已存在
+				const fileExistsresp = await isFileExists(fileName);
+				if (fileExistsresp == 'true') {
+					showMsg("檔案名稱重復", "上傳圖片的檔案名稱已存在, 上傳後會覆蓋舊有檔案");
+				}
+				//顯示上傳檔案圖片
+				const fr = new FileReader();
+				fr.onload = function (e) {
+					$('#showImage').attr('src', e.target.result);
+					$('#showImageDiv').css("display", "block");
+				};
+				fr.readAsDataURL(file);
+				
+				$('#imageName').val(fileName);
+				$('#changeImage').val("changeImage");
+			});
+			
+			function checkfileSubName(fileName) {
+				const validExts = new Array(".jpg", ".jpge", ".png");
+				const subFileName = fileName.substring(fileName.lastIndexOf('.'));
+				if (validExts.indexOf(subFileName) < 0) {
+					showMsg("檔案類型錯誤", "可接受的檔案類型： JPG, PNG");
+					$('#uploadFile').val(null);
+				    return true;
+				}
+				return false;
+			}
+			
+			function doadd() {
+				doClearData();
+				$('#createTime').val(new Date());
+				setShowItem('ADD');
+				$('#updateModal').modal('show');
+			}
+			function dosave() {
+				$("#updateForm").submit()
+			}
+
+			function doquery() {
+				dojsGrid();
+			}
+		
+			/*function dodelete() {
+				let functionId = document.getElementById("updateFunctionId").value;
+           		$.ajax({
+                       url: '/apiGLFunction/delete',
+                       type: 'DELETE',
+                       data: {
+                           "id": functionId
+                       },
+                       success: function(data) {
+                       	errorMsg("刪除結果", "刪除成功");
+                       	doClearData();
+                       },
+                       error: function(error) {
+                       	errorMsg("錯誤", error.responseJSON.message);
+                       	doClearData();
+                       }
+                   })
+			}*/
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryProduct', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "productId", type: "text", width: 40 , title:"編號" },
+						{ name: "productName", type: "text", width: 120 ,title: "商品名稱"},
+						{ name: "price", type: "text", width: 50 , title:"單價" },
+						{ name: "cost", type: "text", width: 50, title:"成本" },
+						{ name: "stock", type: "text", width: 40, title:"庫存"},
+						{ name: "unit", type: "text", width: 40, title:"單位"},
+						{ name: "classify", type: "text", width: 80, title:"分頖" },
+						{ name: "image", type: "text", width: 80, title:"圖片名稱" },
+						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="update-btn-color">').text("編輯")
+				                	.on("click", function() {
+				                		$('#updateProductId').val(item.productId);
+				                		setShowItem('UPDATE');
+				                		const funcurl = /*[[@{/product/getProduct/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl  + item.productId,
+				                		    success: function (data) {
+				                		    	$('#updateProductName').val(data["productName"]);
+						                		$('#updatePrice').val(data["price"]);
+						                		$('#updateCost').val(data["cost"]);
+						                		$('#updateUnit').val(data["unit"]);
+						                		$('#updateClassify').val(data["classify"]);
+						                		$('#imageName').val(data["image"]);
+						                		let enabledValue = (data["enabled"] == '1' ? true : false);
+						                		$('#updateEnabled').prop('checked', enabledValue);
+						                		let createTime = data["createTime"].toDate("yyyy-mm-dd hh:ii:ss");
+						                		$('#createTime').val(createTime);
+						                		$('#createUser').val(data["createUser"]);
+						                		$('#stock').val(data["stock"]);
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						}
+					]
+				})
+			}
+
+			function doClearData() {
+				$('#ProductIddvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				document.getElementById("updateForm").reset();
+        		$('#updateEnabled').prop('checked', true);
+        		$('#updateEnabled').val('0');
+        		
+        		$('#error').val("");
+        		$('#showImageDiv').css("display", "none");
+			}
+
+			function checkData() {
+				if (document.getElementById("updateProductName").value == '') {
+					document.getElementById("error").innerHTML = "商品名稱不能為空白";
+					return false;
+				}
+				return true;
+			}
+			
+			function setShowItem(value) {
+				const title = value == "ADD" ? "新增商品資料" : "修改商品資料";
+				const addNone = value == "ADD" ? "none" : "inline";
+				const addInline = value == "ADD" ? "inline" : "none";
+				const method = value == "ADD" ? "POST" : "PUT";
+				
+				$('#updateModalTitle').val(title);
+				$('#ProductIddvi').css("display", addNone);
+				$('#imageName').css("display", addNone);
+				$('#imagebtn').css("display", addNone);
+				$('#uploadFile').css("display", addInline);
+				$('#_method').val(method);
+			}
+			
+			function doChangeImage() {
+				$('#imagebtn').css("display", "none");
+				$('#imageName').css("display", "none");
+				$('#uploadFile').css("display", "inline");
+				$('#changeImage').val("changeImage");
+			}
+			
+	    </script>
+	</body>
+</html>

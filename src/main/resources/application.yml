@@ -1,0 +1,55 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /VendingMachine
+  tomcat:
+    threads:
+      max: 200
+    uri-encoding: UTF-8
+    basedir: /data/logs/VendingMachine/access_log
+    accesslog:
+      enabled: true
+      pattern: '{"i":"%{X-Forwarded-For}i","a":"%a","A":"%A","t":"%{yyyy-MM-dd HH:mm:ss.SSS}t","m":"%m","U":"%U","s":%s,"b":%b,"D":%D,"I":"%I"}'
+      suffix: .log
+        
+spring:
+  profiles:
+    active: local
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  mvc:
+      hiddenmethod:
+         filter:
+           enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      location: c:/data
+
+springboot:
+  datasource:
+    oracle:
+      jdbc-url: jdbc:oracle:thin:@localhost:1521:xe
+      username: LOCAL
+      password: root
+      driverClassName: oracle.jdbc.driver.OracleDriver
+      maximumPoolSize: 2
+      connectionTimeout: 30000
+    mssql:
+      jdbc-url: jdbc:sqlserver://127.0.0.1:1433;database=VENDINGMACHINE;encrypt=false;
+      username: tommy
+      password: 12345678
+      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      maximumPoolSize: 2
+      connectionTimeout: 30000
+        
+file:
+  upload:
+    path: c:/data/image/
+    relative: /image/**

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>商品資料管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	
+		    <div class="content-wrapper">
+			    <div class="main-content">
+			    	<div class="main-title">
+						<span class="title-text">ERROR</span>
+		             </div>
+					<div class="errorMsg" id="errorMsg"> </div>
+					
+					<div class="pagebtn">
+						<div id = "returnbtn" class="btn newbtn-gray" onclick="doreturn();">返回</div>
+					</div>
+			
+				</div>
+			</div>
+		    
+	    </div>
+	    
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script language="JavaScript" type="text/JavaScript">
+			//回上一頁
+			function doreturn() {
+				if(loginMessage != 'null') {
+					window.location.href =  eportalHomepage;
+				} else {
+					<% session.setAttribute("querysession", "return"); %>;
+					history.back();
+				}
+			}
+			
+		</script>
+	</body>
+</html>

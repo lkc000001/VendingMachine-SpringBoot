@@ -1,0 +1,143 @@
+body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F5F5F5;
+    border-top:5px solid #F15725;
+    box-sizing: border-box;
+}
+
+
+
+.whitebg{
+    background-color: white;
+    width: 425px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    padding: 25px 45px;
+    box-sizing: border-box;
+}
+.whitebg .logo{
+    width: 150px;
+    margin: auto;
+}
+.s-title{
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;  
+    margin: 30px 0;  
+}
+.s-title .s-txt{
+    display: block;
+    color: #bfbdbd;
+    position: relative;
+}
+.s-title span:before, .s-title span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    background: #F3F3F3;
+    width: 35%;
+    height: 2px;
+}
+.s-title span:before {
+    left: 0; 
+  }
+.s-title span:after {
+    right: 0;
+}
+.inputblock{
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+}
+.inputblock label{
+    font-size: 20px;
+    font-weight: 600;
+    color: #6C6C6C;
+    width: 120px;
+    display: block;
+}
+.inputblock input{
+    padding-left: 10px;
+    border: 0;
+    height: 36px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    width: calc(100% - 120px);
+    box-sizing: border-box;
+    margin: 0;
+}
+.inputblock input:focus{
+    border: 1px solid #ffaa8e
+}
+.inputblock input.inputcode{
+    width: 110px;
+    text-align: center;
+}
+.inputblock .codeimg{
+    width: 60px;
+    margin: 0 5px ;
+}
+.inputblock i{
+    font-size: 20px;
+    cursor: pointer;
+}
+.error{
+    text-align: center;
+    color: #FF4E00;
+    margin-bottom: 20px;
+}
+.loginbtn{
+    display: flex;
+    justify-content: space-between;
+}
+.loginbtn .btn{
+    width: 150px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+.loginbtn .btn.newbtn-yellow{
+    background-color: #F15A22;
+    border: 0;
+}
+.loginbtn .btn.newbtn-yellow:hover{
+    background-color: #ed784e;
+}
+.showctrl{
+    display: flex;
+    align-items: center;
+}
+@media screen and (max-width: 430px){
+    .whitebg{
+        width: 350px;
+        padding: 25px 15px;
+    }
+}
+
+.eportalbtn{
+    display: none;
+    justify-content: center;
+}
+.eportalbtn .btn{
+    width: 150px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+.eportalbtn .btn.newbtn-yellow{
+    background-color: #F15A22;
+    border: 0;
+}
+.eportalbtn .btn.newbtn-yellow:hover{
+    background-color: #ed784e;
+}
