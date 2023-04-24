@@ -24,19 +24,19 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="showMsgModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" id="showMsgModalTitle"></h4>
+					<h4 class="modal-title" id="deleteMsgTitle"></h4>
 				</div>
 				<div class="wordWrap modal-body">
-					<h4 id="showMsgModalBoby"></h4>
+					<h4 id="deleteMsgBoby"></h4>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary controlhidden" data-bs-dismiss="modal" id="showMsgConfirmBtn" >確認</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="dodelete()" >確認</button>
 					&nbsp;&nbsp;
-					<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
+					<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal" id="modalCloseBtn">關閉</button>
 				</div>
 			</div>
 		</div>

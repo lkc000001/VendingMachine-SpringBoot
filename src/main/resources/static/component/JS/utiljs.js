@@ -64,6 +64,12 @@ function showMsg(title, msg) {
 	$('#myModal').modal('show');
 }
 
+function deleteConfirmMsg(title, msg) {
+	$('#deleteMsgTitle').text(title);
+	$('#deleteMsgBoby').text(msg);
+	$('#deleteModal').modal('show');
+}
+
 var selectEnabled = [
 	{ id: "0", name: "未啟用" },
 	{ id: "1", name: "啟用" }

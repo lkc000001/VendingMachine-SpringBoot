@@ -97,38 +97,54 @@
 						<div class="wordWrap modal-body" id="addDataDiv">
 							<form id="updateForm" name="updateForm" method="POST" th:action="@{/appUser/save}">
 					            <input type="hidden" id="_method" name="_method" value="PUT" />
-					            <input type="hidden" id="createTime" name="createTime"/>
-					            <input type="hidden" id="createUser" name="createUser"/>
 					            
 					            <div class="search-block">
 					            	<div class="search-block-line controlhidden" id="appUserDiv" >
 				                        <label>
-				                            <span class="text" >採購單號：</span>
-				                            <input type="number" class="modal-readonly" id="updateAppUser" name="id" readonly="readonly">
+				                            <span class="text" >編　　號：</span>
+				                            <input type="text" class="modal-readonly" id="updateUserId" name="userId" readonly="readonly">
 				                        </label>
 					                </div>
 					                <div class="search-block-line">
 				                        <label>
-				                            <span class="text" >商品編號：</span>
-				                            <input type="number" id="updateProductId" name="productId">
+				                            <span class="text" >帳　　號：</span>
+				                            <input type="text" id="updateAccount" name="account">
+				                        </label>
+					                </div>
+					                 <div class="search-block-line" id="pwdDiv">
+				                        <label>
+				                            <span class="text" >密　　碼：</span>
+				                            <input type="password" id="updatePwd" name="pwd">
 				                        </label>
 					                </div>
 					                <div class="search-block-line">
 				                        <label>
-				                            <span class="text" >商品名稱：</span>
-				                            <input type="text" class="modal-readonly" id="updateProductName" name="productName" value="無此產品編號!!" readonly="readonly">
+				                            <span class="text" >員工編號：</span>
+				                            <input type="text" id="updateAccountId" name="accountId">
 				                        </label>
 					                </div>
 					                <div class="search-block-line">
 				                        <label>
-				                            <span class="text">採購單價：</span>
-				                            <input type="number" id="updateProductCost" name="productCost">
+				                            <span class="text">員工姓名：</span>
+				                            <input type="text" id="updateName" name="name">
 				                        </label>
 					                </div>
 					                <div class="search-block-line">
 				                        <label>
-				                            <span class="text">採購數量：</span>
-				                            <input type="text" id="updateQuantity" name="quantity">
+				                            <span class="text">群　　組：</span>
+				                            <input type="text" id="updateGroupName" name="groupName">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">部　　門：</span>
+				                            <input type="text" id="updateBranch" name="branch">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+					                 	<label>
+				                            <span class="text">啟　　用：</span>
+				                            <input type="checkbox" id="updateEnabled" name="enabled">
 				                        </label>
 					                </div>
 					            </div>
@@ -137,8 +153,8 @@
 						</div>
 						<div class="modal-footer">
 						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
-							<!--  &nbsp;&nbsp;
-							<button type="button" id="deleteConfirmbtn" class="btn btn-primary" onclick="dodelete();">刪除</button>-->
+							&nbsp;&nbsp;
+							<button type="button" id="deleteConfirmbtn" class="btn btn-danger" onclick="deleteConfirm();">刪除</button>
 							&nbsp;&nbsp;
 							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
 						</div>
@@ -170,7 +186,6 @@
 			
 			function doadd() {
 				doClearData();
-				$('#createTime').val(new Date());
 				setShowItem('ADD');
 				$('#updateModal').modal('show');
 			}
@@ -181,6 +196,24 @@
 				}
 			}
 
+			function deleteConfirm() {
+				deleteConfirmMsg("刪除確認", "確認刪除帳號:" + $('#updateAccount').val())
+			}
+			
+			function dodelete() {
+				let userId = $('#updateUserId').val();
+				const deleteUrl = /*[[@{/appUser/delete/}]]*/'';
+           		$.ajax({
+					url: deleteUrl + userId,
+					type: 'DELETE',
+					success: function(data) {
+						$('#updateModal').modal('hide');
+						doClearData();
+						showMsg("刪除結果", data);
+                    }
+                })
+			}
+			
 			function doquery() {
 				dojsGrid();
 			}
@@ -220,32 +253,30 @@
 					    }
 					},
 					fields: [
-						{ name: "userId", type: "text", width: 80 , title:"編號" },
+						{ name: "userId", type: "text", width: 50 , title:"編號" },
 						{ name: "name", type: "text", width: 80 , title:"員工姓名" },
 						{ name: "account", type: "text", width: 80 ,title: "帳號"},
 						{ name: "accountId", type: "text", width: 80 , title:"員工編號" },
-						{ name: "groupName", type: "text", width: 120, title:"群組"},
+						{ name: "groupName", type: "text", width: 80, title:"群組"},
 						{ name: "branch", type: "text", width: 80, title:"部門" },
 						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
 						{ 
 							itemTemplate: function(_, item) {
 				                return $('<button class="update-btn-color">').text("編輯")
 				                	.on("click", function() {
-				                		$('#updatePurchaseIdId').val(item.id);
+				                		$('#updateUserId').val(item.userId);
 				                		setShowItem('UPDATE');
-				                		const funcurl = /*[[@{/purchase/getPurchase/}]]*/'';
+				                		const funcurl = /*[[@{/appUser/getAppUser/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.id,
+				                		    url: funcurl + item.userId,
 				                		    success: function (data) {
-				                		    	$('#updateProductId').val(data["productId"]);
-						                		$('#updateProductCost').val(data["productCost"]);
-						                		$('#updateQuantity').val(data["quantity"]);
-						                		$('#beforeQuantity').val(data["quantity"]);
-						                		let createTime = data["createTime"].toDate("yyyy-mm-dd hh:ii:ss");
-						                		$('#createTime').val(createTime);
-						                		$('#createUser').val(data["createUser"]);
-						                		$('#updateProductName').val(getProductName(data["productId"]));
+				                		    	$('#updateUserId').val(data["userId"]);
+						                		$('#updateAccount').val(data["account"]);
+						                		$('#updateAccountId').val(data["accountId"]);
+						                		$('#updateName').val(data["name"]);
+						                		$('#updateGroupName').val((data["groupName"]));
+						                		$('#updateBranch').val((data["branch"]));
 				                		    }
 				                	    });
 				                		$('#updateModal').modal('show');
@@ -261,26 +292,22 @@
 				
 				document.getElementById("queryForm").reset();
 				document.getElementById("updateForm").reset();
+				$('#updateEnabled').prop('checked', true);
         		
         		$('#error').text("");
         		$('#showImageDiv').css("display", "none");
+        		$('#deleteModal').modal('hide');
 			}
 
 			function checkData() {
-				const updateProductName = $('#updateProductName').val();
-				console.log(updateProductName);
-				if (updateProductName == "無此產品編號!!") {
-					$('#error').text("請輸入正確的產品編號");
+				const updateAccount = $('#updateAccount').val().trim();
+				if (updateAccount == "") {
+					$('#error').text("帳號不可空白");
 					return false;
 				}
-				const updateProductCost = $('#updateProductCost').val();
-				if (updateProductCost <= 0 ) {
-					$('#error').text("採購單價需大於0");
-					return false;
-				}
-				const updateQuantity = $('#updateQuantity').val();
-				if (updateQuantity <= 0 ) {
-					$('#error').text("採購數量需大於0");
+				const updatePwd = $('#updatePwd').val().trim();
+				if ($('#updateUserId').val() == "" && updatePwd == "" ) {
+					$('#error').text("密碼不可空白");
 					return false;
 				}
 				return true;
@@ -291,13 +318,21 @@
 				const addNone = value == "ADD" ? "none" : "inline";
 				const addInline = value == "ADD" ? "inline" : "none";
 				const method = value == "ADD" ? "POST" : "PUT";
+				if(value == "ADD") {
+					$('#updateAccount').prop("readonly", "");
+					$('#updateAccount').removeClass("modal-readonly");
+				} else {
+					$('#updateAccount').prop("readonly", "readonly");
+					$('#updateAccount').addClass("modal-readonly");
+				}
 				
 				$('#updateModalTitle').val(title);
 				$('#appUserDiv').css("display", addNone);
+				$('#pwdDiv').css("display", addInline);
+				$('#deleteConfirmbtn').css("display", addNone);
 				$('#_method').val(method);
 			}
-			
-			
+
 	    </script>
 	</body>
 </html>
