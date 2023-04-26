@@ -45,6 +45,7 @@ public class FunctionController {
 	@GetMapping(path = "/")
     public String index(Model model) {
 		model.addAttribute("selectFunctionType", functionService.findByFunctionType());
+		model.addAttribute("selectFunction", "function");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;

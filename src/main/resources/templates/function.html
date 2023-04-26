@@ -136,7 +136,7 @@
 					                            <span class="text">群　　組：</span>
 					                            <select id="updateFunctionGroup" name="functionGroup" onchange="setTypeShow();">
 												   	<option value="0">主選單</option>
-		                            				<option value="1">子選單</option>
+		                            				<option value="1" selected="selected">子選單</option>
 												</select>
 					                        </label>
 					                    </div>
@@ -204,6 +204,7 @@
 				$('#updateModalTitle').val('新增功能資料');
 				$('#functionIddvi').css("display", "none");
 				$('#_method').val('POST');
+				
 				
 				$('#updateModal').modal('show');
 			}
@@ -306,15 +307,10 @@
 				$('#functionIddvi').css("display", "none");
 				
 				document.getElementById("queryForm").reset();
-				
-				$('#updateFunctionName').val(null);
-        		$('#updateFunctionShowName').val(null);
-        		$('#updateFunctionUrl').val(null);
-        		$('#updateSort').val(null);
-
+				document.getElementById("updateForm").reset();
         		$('#updatetype option:first').prop('selected', 'selected');
         		$('#updateEnabled').prop('checked', true);
-        		$('#updateFunctionGroup').prop('checked', true);
+        		setTypeShow();
 			}
 
 			function checkData() {

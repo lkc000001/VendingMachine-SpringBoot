@@ -111,10 +111,13 @@ public class FunctionServiceImpl implements FunctionService {
     		function.setCreateUser(username);
     		functionSaveResp = functionRepository.save(function);
     		
-    		String functionId = functionSaveResp.getFunctionId().toString();
-    		//如果是主選單儲存type為ID
-    		//因為上方有做save, 有Transactional可以不用再次save
-    		function.setType(functionId);
+    		if("0".equals(functionVo.getFunctionGroup())) {
+    			String functionId = functionSaveResp.getFunctionId().toString();
+	    		//如果是主選單儲存type為ID
+	    		//因為上方有做save, 有Transactional可以不用再次save
+	    		function.setType(functionId);
+    		}
+    		
     	} else {
 			if("0".equals(functionVo.getFunctionGroup())) {
     			functionVo.setType(functionVo.getFunctionId().toString());
