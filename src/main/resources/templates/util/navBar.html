@@ -20,18 +20,18 @@
 		        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="listHtml">
 		            <li th:each="functionGroup, status : ${functions}" class="nav-item menu-is-opening menu-open">
 		            	
-		            	<a href="#" class="nav-link main" >
-		                    <i class="nav-icon fa-solid fa-magnifying-glass"></i>
-		                    <p th:text="${functionGroup.value[0].functionShowName}"><i class="right fas fa-angle-left"></i></p>
+		            	<a href="#" class="nav-link main" th:if="${functionGroup.value[0].functionGroup} eq 0">
+		                    <i th:classappend="${functionGroup.value[0].functionUrl}"></i>
+		                    <p th:text="${functionGroup.value[0].functionShowName}" ><i class="right fas fa-angle-left"></i></p>
 		                </a> 
 		                
-		                <ul class="nav nav-treeview">
+		                <ul class="nav nav-treeview" th:if="${functionGroup.value[0].functionGroup} eq 0">
 			            	<li th:each="function, funcStatus : ${functionGroup.value}" class="nav-item">
 		                        <a th:if="${funcStatus.index} ne 0" th:href="@{/{url}/(url=${function.functionUrl.replace('/', '')})}" class="nav-link">
 		                            <span class="navlisticon">
 		                            	<i th:if="${function.functionName} == ${selectFunction}" class="fa-solid fa-circle nav-icon"></i>
 		                            </span>
-		                            <p th:text="${function.functionShowName}" th:id="'show' + ${function.functionName}"></p>
+		                            <p th:text="${function.functionShowName}" th:id="'show' + ${function.functionName}"><i class="fa-solid fa-circle nav-icon"></i></p>
 		                        </a>
 		                    </li>
 			            </ul>

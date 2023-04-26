@@ -120,7 +120,7 @@ public class FunctionServiceImpl implements FunctionService {
     		
     	} else {
 			if("0".equals(functionVo.getFunctionGroup())) {
-    			functionVo.setType(functionVo.getFunctionId().toString());
+				function.setType(functionVo.getFunctionId().toString());
     		}
     		function.setUpdateTime(new Date());
     		function.setUpdateUser(username);
