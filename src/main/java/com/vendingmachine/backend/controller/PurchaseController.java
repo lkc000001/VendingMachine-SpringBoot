@@ -1,6 +1,9 @@
 package com.vendingmachine.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.vendingmachine.backend.entity.Purchase;
 import com.vendingmachine.backend.service.PurchaseService;
 import com.vendingmachine.backend.vo.JSGridReturnData;
 import com.vendingmachine.backend.vo.PurchaseVo;
+import com.vendingmachine.exception.QueryNoDataException;
+import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
 @RequestMapping(value = "/purchase")
@@ -27,6 +33,7 @@ public class PurchaseController {
 	
 	@GetMapping("/")
     public String index(Model model) {
+		model.addAttribute("selectFunction", "purchase");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;
@@ -36,15 +43,21 @@ public class PurchaseController {
 	
 	@PostMapping(path = "/queryPurchase", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSGridReturnData<PurchaseVo>> queryPurchase(@RequestBody PurchaseVo purchaseVo) {
-		JSGridReturnData<PurchaseVo> purchaseVos = purchaseService.queryPurchase(purchaseVo);
-		return ResponseEntity.ok(purchaseVos);
+		Page<Purchase> purchasePage = purchaseService.queryPurchase(purchaseVo);
+		
+		if(purchasePage.isEmpty()) {
+			throw new QueryNoDataException("查無資料!!!", 404);
+		}
+		
+		List<PurchaseVo> purchaseVos = BeanCopyUtil.copyBeanList(purchasePage.getContent(), PurchaseVo.class);
+		return ResponseEntity.ok(new JSGridReturnData<PurchaseVo>(purchaseVos, purchasePage.getTotalElements()));
     }
 	
 	@GetMapping(path = "/getPurchase/{id}")
 	@ResponseBody
     public ResponseEntity<PurchaseVo> getPurchase(@PathVariable("id") Long id) {
-		PurchaseVo purchaseVo = purchaseService.getPurchase(id);
-    	return ResponseEntity.ok(purchaseVo);
+		Purchase purchase = purchaseService.getPurchase(id);
+    	return ResponseEntity.ok(BeanCopyUtil.copyBean(purchase, PurchaseVo.class));
     }
 	
 	@PostMapping(path = "/save")

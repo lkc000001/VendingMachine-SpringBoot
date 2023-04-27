@@ -22,16 +22,18 @@ public class VendingMachineAspect {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	//統一例外處理
-	@Pointcut(value = "execution(* com.demo.controller.*.*(..))")
-	public void controllerpt() {/* 設定切入點 */}
+	@Pointcut(value = "execution(* com.vendingmachine.backend.controller.*.*(..))")
+	public void backendControllerpt() {/* 設定切入點 */}
 	
+	@Pointcut(value = "execution(* com.vendingmachine.frontend.controller.*.*(..))")
+	public void frontendControllerpt() {/* 設定切入點 */}
     
 	/**
 	 * Exception處理
 	 * @param proceedingJoinPoint
 	 * @return
 	 */
-	@Around(value = "controllerpt()")
+	@Around(value = "backendControllerpt() || frontendControllerpt()")
 	public Object sessionAndExceptionCont(ProceedingJoinPoint proceedingJoinPoint) {
 		String methodName = proceedingJoinPoint.getSignature().getName();
 		Object result = null;

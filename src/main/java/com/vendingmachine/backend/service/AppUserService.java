@@ -1,13 +1,15 @@
 package com.vendingmachine.backend.service;
 
+import org.springframework.data.domain.Page;
+
+import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.vo.AppUserVo;
-import com.vendingmachine.backend.vo.JSGridReturnData;
 
 public interface AppUserService {
 	
-	JSGridReturnData<AppUserVo> queryAppUser(AppUserVo appUserVo);
+	Page<AppUser> queryAppUser(AppUserVo appUserVo);
 	
-	AppUserVo getAppUser(Long id);
+	AppUser getAppUser(Long id);
 	
 	String save(AppUserVo appUserVo, String func);
 	

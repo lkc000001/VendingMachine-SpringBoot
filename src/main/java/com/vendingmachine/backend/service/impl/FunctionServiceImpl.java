@@ -3,7 +3,6 @@ package com.vendingmachine.backend.service.impl;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,23 +14,16 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.repositories.FunctionRepository;
-import com.vendingmachine.backend.service.AppUserService;
 import com.vendingmachine.backend.service.FunctionService;
 import com.vendingmachine.backend.vo.FunctionVo;
-import com.vendingmachine.backend.vo.JSGridReturnData;
-import com.vendingmachine.backend.vo.ProductVo;
 import com.vendingmachine.backend.vo.SelectDataVo;
-import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 
@@ -48,14 +40,7 @@ public class FunctionServiceImpl implements FunctionService {
 	HttpSession session;
 	
 	@Override
-	public JSGridReturnData<Function> findByAll(Pageable pageable) {
-		Page<Function> functions = functionRepository.findAll(pageable);
-		long count = functionRepository.count();
-		return new JSGridReturnData<Function>(functions.getContent(), count);
-	}
-	
-	@Override
-	public JSGridReturnData<FunctionVo> queryFunction(FunctionVo functionVo) {
+	public Page<Function> queryFunction(FunctionVo functionVo) {
 		checkData(functionVo);
 		Page<Function> functions = functionRepository.queryFunction(functionVo.getFunctionName(),
 																	functionVo.getFunctionShowName(),
@@ -64,18 +49,14 @@ public class FunctionServiceImpl implements FunctionService {
 																	functionVo.getType(),
 																	functionVo.getFunctionGroup(),
 																	functionVo.convertPageable());
-		if(functions.isEmpty()) {
-			throw new QueryNoDataException("查無資料!!!", 404);
-		}
-		List<FunctionVo> functionVos = BeanCopyUtil.copyBeanList(functions.getContent(), FunctionVo.class);
-		return new JSGridReturnData<FunctionVo>(functionVos, functions.getTotalElements());
+		return functions;
 	}
 
 	@Override
-	public FunctionVo getFunction(Long id) {
+	public Function getFunction(Long id) {
 		Optional<Function> function = functionRepository.findById(id);
 		if(function.isPresent()) {
-			return BeanCopyUtil.copyBean(function.get(), FunctionVo.class);
+			return function.get();
 		}
 		return null;
 	}	

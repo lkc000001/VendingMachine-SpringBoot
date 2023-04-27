@@ -1,17 +1,16 @@
 package com.vendingmachine.backend.service;
 
-import java.util.Optional;
-
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.vendingmachine.backend.vo.JSGridReturnData;
+import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.vo.ProductVo;
 
 public interface ProductService {
 	
-	JSGridReturnData<ProductVo> queryProduct(ProductVo productVo);
+	Page<Product> queryProduct(ProductVo productVo);
 	
-	ProductVo getProduct(Long id);
+	Product getProduct(Long id);
 	
 	boolean saveUploadedFile(MultipartFile file);
 	

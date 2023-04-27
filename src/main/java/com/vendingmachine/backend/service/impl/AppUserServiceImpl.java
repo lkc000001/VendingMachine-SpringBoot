@@ -29,7 +29,7 @@ public class AppUserServiceImpl implements AppUserService {
 	private StringUtil StringUtil;
 	
 	@Override
-	public JSGridReturnData<AppUserVo> queryAppUser(AppUserVo appUserVo) {
+	public Page<AppUser> queryAppUser(AppUserVo appUserVo) {
 		checkData(appUserVo);
 		Page<AppUser> appUsers = appUserRepository.queryAppUser(appUserVo.getUserId(),
 																appUserVo.getBranch(),
@@ -39,18 +39,15 @@ public class AppUserServiceImpl implements AppUserService {
 																appUserVo.getName(),
 																appUserVo.getEnabled(),
 																appUserVo.convertPageable());
-		if(appUsers.isEmpty()) {
-			throw new QueryNoDataException("查無資料!!!", 404);
-		}
-		List<AppUserVo> appUserVos = BeanCopyUtil.copyBeanList(appUsers.getContent(), AppUserVo.class);
-		return new JSGridReturnData<AppUserVo>(appUserVos, appUsers.getTotalElements());
+		
+		return appUsers;
 	}
 
 	@Override
-	public AppUserVo getAppUser(Long id) {
+	public AppUser getAppUser(Long id) {
 		Optional<AppUser> appUser = appUserRepository.findById(id);
 		if(appUser.isPresent()) {
-			return BeanCopyUtil.copyBean(appUser.get(), AppUserVo.class);
+			return appUser.get();
 		}
 		return null;
 	}

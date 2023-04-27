@@ -43,6 +43,7 @@ function queryajax(apiurl, methodType, requestData) {
 				$('#itemsCount').text(data.itemsCount);
 		    },
 		    error: function (error) {
+				console.log(error);
 				$("#jsGrid").children().remove();
 				$('#itemsCountDiv').css("display", "none");
 				showMsg("錯誤", error.responseJSON.errorMessage);

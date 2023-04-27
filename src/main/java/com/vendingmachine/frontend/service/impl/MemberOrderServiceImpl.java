@@ -1,4 +1,4 @@
-package com.vendingmachine.backend.service.impl;
+package com.vendingmachine.frontend.service.impl;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,15 +25,19 @@ import com.vendingmachine.backend.service.ProductService;
 import com.vendingmachine.backend.vo.JSGridReturnData;
 import com.vendingmachine.backend.vo.ProductVo;
 import com.vendingmachine.exception.QueryNoDataException;
+import com.vendingmachine.frontend.entity.MemberOrder;
+import com.vendingmachine.frontend.repositories.MemberOrderRepository;
+import com.vendingmachine.frontend.service.MemberOrderService;
+import com.vendingmachine.frontend.vo.MemberOrderVo;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 import com.vendingmachine.util.ValidateUtil;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class MemberOrderServiceImpl implements MemberOrderService {
 
 	@Autowired
-	private ProductRepository productRepository;
+	private MemberOrderRepository memberOrderRepository;
 
 	@Autowired
 	private StringUtil StringUtil;
@@ -45,54 +49,32 @@ public class ProductServiceImpl implements ProductService {
 	String filePath;
 	
 	@Override
-	public Page<Product> queryProduct(ProductVo productVo) {
-		checkData(productVo);
-		Page<Product> products = productRepository.queryProduct(productVo.getProductId(),
-																  productVo.getProductName(),
-																  productVo.getClassify(),
-																  productVo.getPriceStart(),
-																  productVo.getPriceEnd(),
-																  productVo.getCostStart(),
-																  productVo.getCostEnd(),
-																  productVo.getImage(),
-																  productVo.getEnabled(),
-																  productVo.convertPageable());
+	public Page<MemberOrder> queryMemberOrder(MemberOrderVo memberOrderVo) {
+		checkData(memberOrderVo);
+		Page<MemberOrder> memberOrders = memberOrderRepository.queryMemberOrder(memberOrderVo.getOrderId(), 
+																				memberOrderVo.getMemberId(), 
+																				memberOrderVo.getProductId(), 
+																				memberOrderVo.getCreateTimeStart(), 
+																				memberOrderVo.getCreateTimeEnd(), 
+																				memberOrderVo.convertPageable());
 		
-		return products;
+		return memberOrders;
 	}
 
 	@Override
-	public Product getProduct(Long id) {
-		Optional<Product> product = productRepository.findById(id);
-		if(product.isPresent()) {
-			return product.get();
+	public MemberOrder getMemberOrder(String id) {
+		Optional<MemberOrder> memberOrder = memberOrderRepository.findById(id);
+		if(memberOrder.isPresent()) {
+			return memberOrder.get();
 		}
 		return null;
 	}	
-	
-	@Override
-	public boolean saveUploadedFile(MultipartFile file) {
-        try {
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(filePath + file.getOriginalFilename());
-			Files.write(path, bytes, new OpenOption[] {StandardOpenOption.CREATE, StandardOpenOption.WRITE});
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
 
-	@Override
-	public boolean isFileExists(String fileName) {
-		Path path = Paths.get(filePath + fileName);
-		boolean exists = Files.exists(path);
-		return exists;
-	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public String save(ProductVo productVo, String func) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	public String save(MemberOrderVo memberOrderVo, String func) {
+		/*String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		if("changeImage".equals(productVo.getChangeImage())) {
 			boolean uploadedFileResp =saveUploadedFile(productVo.getUploadFile());
@@ -116,20 +98,14 @@ public class ProductServiceImpl implements ProductService {
 		Product productSaveResp = productRepository.save(product);
 		if(productSaveResp == null) {
 			return func +"功能資料失敗";
-		}
+		}*/
     	return func +"功能資料成功";
 	}
 	
-	private void checkData(ProductVo productVo) {
+	private void checkData(MemberOrderVo memberOrderVo) {
 
-		if(validateUtil.isNotBlank(productVo.getProductName())) {
-			productVo.setProductName(StringUtil.addPercentage(productVo.getProductName(), 3));
-		}
-		if(validateUtil.isNotBlank(productVo.getClassify())) {
-			productVo.setClassify(StringUtil.addPercentage(productVo.getClassify(), 3));
-		}
-		if(validateUtil.isNotBlank(productVo.getImage())) {
-			productVo.setImage(StringUtil.addPercentage(productVo.getImage(), 3));
+		if(validateUtil.isNotBlank(memberOrderVo.getOrderId())) {
+			memberOrderVo.setOrderId(StringUtil.addPercentage(memberOrderVo.getOrderId(), 3));
 		}
 	}
 }

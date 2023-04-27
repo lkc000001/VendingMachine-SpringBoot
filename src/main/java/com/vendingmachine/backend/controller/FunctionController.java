@@ -1,20 +1,9 @@
 package com.vendingmachine.backend.controller;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.service.FunctionService;
 import com.vendingmachine.backend.vo.FunctionVo;
-import com.vendingmachine.backend.vo.JSGridFilter;
 import com.vendingmachine.backend.vo.JSGridReturnData;
-import com.vendingmachine.backend.vo.SelectDataVo;
+import com.vendingmachine.exception.QueryNoDataException;
+import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
 @RequestMapping(value = "/function")
@@ -55,15 +44,21 @@ public class FunctionController {
 	
 	@PostMapping(path = "/queryFunction", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSGridReturnData<FunctionVo>> queryFunction(@RequestBody FunctionVo functionVo) {
-		JSGridReturnData<FunctionVo> functions = functionService.queryFunction(functionVo);
-    	return ResponseEntity.ok(functions);
+		Page<Function> functionPage = functionService.queryFunction(functionVo);
+		
+		if(functionPage.isEmpty()) {
+			throw new QueryNoDataException("查無資料!!!", 404);
+		}
+		
+		List<FunctionVo> functionVos = BeanCopyUtil.copyBeanList(functionPage.getContent(), FunctionVo.class);
+    	return ResponseEntity.ok(new JSGridReturnData<FunctionVo>(functionVos, functionPage.getTotalElements()));
     }
 
-	@PostMapping(path = "/queryAllFunction", consumes = "application/json", produces = "application/json")
+	/*@PostMapping(path = "/queryAllFunction", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSGridReturnData<Function>> queryAllFunction(@RequestBody JSGridFilter jsGridFilter) {
 		JSGridReturnData<Function> functions = functionService.findByAll(jsGridFilter.convertPageable());
     	return ResponseEntity.ok(functions);
-    }
+    }*/
 	
 	@GetMapping(path = "/queryEnableFunction")
 	@ResponseBody
@@ -75,8 +70,8 @@ public class FunctionController {
 	@GetMapping(path = "/getFunction/{id}")
 	@ResponseBody
     public ResponseEntity<FunctionVo> getFunction(@PathVariable("id") Long id) {
-		FunctionVo functionVo = functionService.getFunction(id);
-    	return ResponseEntity.ok(functionVo);
+		Function function = functionService.getFunction(id);
+    	return ResponseEntity.ok(BeanCopyUtil.copyBean(function, FunctionVo.class));
     }
 	
 	@PostMapping(path = "/save")

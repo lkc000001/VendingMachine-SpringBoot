@@ -39,7 +39,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 	private final String NONE = "";
 	
 	@Override
-	public JSGridReturnData<PurchaseVo> queryPurchase(PurchaseVo purchaseVo) {
+	public Page<Purchase> queryPurchase(PurchaseVo purchaseVo) {
 		checkData(purchaseVo);
 		Page<Purchase> purchases = purchaseRepository.queryPurchase(purchaseVo.getId(),
 																    purchaseVo.getProductId(),
@@ -50,18 +50,14 @@ public class PurchaseServiceImpl implements PurchaseService {
 																    purchaseVo.getCreateTimeStart(),
 																    purchaseVo.getCreateTimeEnd(),
 																    purchaseVo.convertPageable());
-		if(purchases.isEmpty()) {
-			throw new QueryNoDataException("查無資料!!!", 404);
-		}
-		List<PurchaseVo> purchaseVos = BeanCopyUtil.copyBeanList(purchases.getContent(), PurchaseVo.class);
-		return new JSGridReturnData<PurchaseVo>(purchaseVos, purchases.getTotalElements());
+		return purchases;
 	}
 
 	@Override
-	public PurchaseVo getPurchase(Long id) {
+	public Purchase getPurchase(Long id) {
 		Optional<Purchase> purchase = purchaseRepository.findById(id);
 		if(purchase.isPresent()) {
-			return BeanCopyUtil.copyBean(purchase.get(), PurchaseVo.class);
+			return purchase.get();
 		}
 		return null;
 	}	

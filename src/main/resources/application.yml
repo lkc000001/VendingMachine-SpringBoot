@@ -36,8 +36,8 @@ springboot:
   datasource:
     oracle:
       jdbc-url: jdbc:oracle:thin:@localhost:1521:xe
-      username: LOCAL
-      password: root
+      username: VENDINGMACHINE
+      password: 12345678
       driverClassName: oracle.jdbc.driver.OracleDriver
       maximumPoolSize: 2
       connectionTimeout: 30000

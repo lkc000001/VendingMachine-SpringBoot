@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>會員訂單資料查詢</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        
+	        <div class="content-wrapper">
+		        <div class="main-content">
+					<div class="main-title">
+				        <span class="title-text" id="showtitle">會員訂單資料查詢</span>
+				    </div>
+				    <!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+			            <div class="search-block">
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >訂單編號：</span>
+			                            <input type="text" id="orderId" name="orderId">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >會員編號：</span>
+			                            <input type="number" id="memberId" name="memberId">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    	<label>
+			                            <span class="text" >產品編號：</span>
+			                            <input type="number" id="productId" name="productId"> 
+			                        </label>
+			                </div>
+			                <div class="search-block-line">
+			                    	<label>
+			                            <span class="text" >購買日期：</span>
+			                            <input class="queryDate-width" type="text" id="createTimeStart" name="createTimeStart">
+			                            ~
+			                            <input class="queryDate-width" type="text" id="createTimeEnd" name="createTimeEnd">
+			                        </label>
+			                </div>
+			                <div class="search-block-line btnventer">
+			                    <div class="btn searchbtn newbtn-gray" onclick="doClear();">清除</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-yellow" onclick="doquery();">搜尋</div>
+			                </div>
+			            </div>
+		            </form>
+				    <!-- 顯示表格 -->
+	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
+				</div>
+			</div>
+
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+	    </div>
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+		
+			$(document).ready(function() {
+				doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+				
+				$(".queryDate-width").datetimepicker({
+					timepicker:false,
+					format:'Y/m/d',
+					mask:true,
+				});
+				
+			});
+
+			function doquery() {
+				dojsGrid();
+			}
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryMemberOrder', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "orderId", type: "text", width: 80 , title:"訂單編號" },
+						{ name: "memberId", type: "text", width: 80 ,title: "會員編號"},
+						{ name: "productId", type: "text", width: 80 , title:"產品編號" },
+						{ name: "productPrice", type: "text", width: 80, title:"購買單價" },
+						{ name: "productCost", type: "text", width: 80 ,title: "購買成本"},
+						{ name: "buyQuantity", type: "text", width: 80 , title:"購買數量" },
+						{ name: "createTime", type: "text", width: 120, title:"採購日期"}
+					]
+				})
+			}
+
+			function doClearData() {
+				$('#purchaseIddvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				document.getElementById("updateForm").reset();
+        		
+        		$('#error').text("");
+        		$('#showImageDiv').css("display", "none");
+			}
+	    </script>
+	</body>
+</html>

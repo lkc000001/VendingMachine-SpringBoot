@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>會員資料管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        
+	        <div class="content-wrapper">
+		        <div class="main-content">
+					<div class="main-title">
+				        <span class="title-text" id="showtitle">會員資料管理</span>
+				    </div>
+				    <!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+			            <div class="search-block">
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >會員編號：</span>
+			                            <input type="text" id="memberId" name="memberId">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >會員姓名：</span>
+			                            <input type="text" id="memberName" name="memberName">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+		                    	<label>
+		                            <span class="text" >是否啟用：</span>
+		                            <select id="enabled" name="enabled">
+									    <option value="" selected></option>
+									    <option value="0">未啟用</option>
+									    <option value="1">啟用</option>
+									</select>                  
+		                        </label>
+			                </div>
+			                <div class="search-block-line btnventer">
+			                    <div class="btn searchbtn newbtn-gray" onclick="doClear();">清除</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-yellow" onclick="doquery();">搜尋</div>
+			                </div>
+			            </div>
+		            </form>
+		            
+				    <!-- 顯示表格 -->
+	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="updateModalTitle"></h4>
+						</div>
+						<div class="wordWrap modal-body" id="addDataDiv">
+							<form id="updateForm" name="updateForm" method="POST" th:action="@{/member/save}" enctype="application/json">
+					            <input type="hidden" id="_method" name="_method" value="PUT" />
+					            <input type="hidden" id="stock" name="stock"/>
+					            
+					            <div class="search-block">
+					            	<div class="search-block-line controlhidden" id="memberIdDvi" >
+				                        <label>
+				                            <span class="text" >會員編號：</span>
+				                            <input type="text" class="modal-readonly" id="updateMemberId" name="memberId" readonly="readonly">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text" >會員姓名：</span>
+				                            <input type="text" id="updateMemberName" name="memberName">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">會員住址：</span>
+				                            <input type="text" id="updateMemberAddress" name="memberAddress">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">會員生日：</span>
+				                            <input class="queryDate-width" type="text" id="updateMemberBirthday" name="memberBirthday">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">會員電話：</span>
+				                            <input type="text" id="updateMemberPhone" name="memberPhone">
+				                        </label>
+					                </div>
+					                <div class="search-block-line">
+				                        <label>
+				                            <span class="text">啟　　用：</span>
+				                            <input type="checkbox" id="updateEnabled" name="enabled">
+				                        </label>
+					                </div>
+					            </div>
+							</form>
+							<div class="error" id="error"></div>
+						</div>
+						<div class="modal-footer">
+						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
+							&nbsp;&nbsp;
+							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+	    </div>
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+		
+			$(document).ready(function() {
+				doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+				
+				$(".queryDate-width").datetimepicker({
+					timepicker:false,
+					format:'Y/m/d',
+					mask:true,
+				});
+				
+			});
+
+			function dosave() {
+				$("#updateForm").submit()
+			}
+			
+			function doquery() {
+				dojsGrid();
+			}
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryMember', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "memberId", type: "text", width: 80 , title:"會員編號" },
+						{ name: "memberName", type: "text", width: 80 ,title: "會員姓名"},
+						{ name: "memberAddress", type: "text", width: 150 , title:"會員住址" },
+						{ name: "memberBirthday", type: "text", width: 80, title:"會員生日" },
+						{ name: "memberPhone", type: "text", width: 80 ,title: "會員電話"},
+						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="update-btn-color">').text("編輯")
+				                	.on("click", function() {
+				                		$('#updateMemberId').val(item.memberId);
+				                		$('#_method').val('PUT');
+				                		$('#updateModalTitle').val('修改會員資料');
+				                		$('#memberIdDvi').css("display", "block");
+				                		let funcurl = /*[[@{/member/getMember/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl  + item.memberId,
+				                		    success: function (data) {
+				                		    	$('#updateMemberName').val(data["memberName"]);
+						                		$('#updateMemberAddress').val(data["memberAddress"]);
+						                		$('#updateMemberBirthday').val(data["memberBirthday"]);
+						                		$('#updateMemberPhone').val(data["memberPhone"]);
+						                		
+						                		let enabledValue = (data["enabled"] == '1' ? true : false);
+						                		$('#updateEnabled').prop('checked', enabledValue);
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						}
+					]
+				})
+			}
+
+			function doClearData() {
+				$('#memberIdDvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				document.getElementById("updateForm").reset();
+        		
+        		$('#error').text("");
+			}
+	    </script>
+	</body>
+</html>

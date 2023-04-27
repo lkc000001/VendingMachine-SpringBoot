@@ -27,7 +27,7 @@ public class ProductVo extends JSGridFilter{
 	
 	private Integer priceEnd;
 	
-	private Integer cost;
+	private Double cost;
 	
 	private Integer costStart;
 	
