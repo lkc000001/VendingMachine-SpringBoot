@@ -26,7 +26,7 @@
 			                <div class="search-block-line">
 			                    <div>
 			                    	<label>
-			                            <span class="text" >訂單編號：</span>
+			                            <span class="text" >扣款編號：</span>
 			                            <input type="text" id="orderId" name="orderId">
 			                        </label>
 			                    	&nbsp;&nbsp;&nbsp;
@@ -38,13 +38,7 @@
 			                </div>
 			                <div class="search-block-line">
 			                    	<label>
-			                            <span class="text" >產品編號：</span>
-			                            <input type="number" id="productId" name="productId"> 
-			                        </label>
-			                </div>
-			                <div class="search-block-line">
-			                    	<label>
-			                            <span class="text" >購買日期：</span>
+			                            <span class="text" >扣款日期：</span>
 			                            <input class="queryDate-width" type="text" id="createTimeStart" name="createTimeStart">
 			                            ~
 			                            <input class="queryDate-width" type="text" id="createTimeEnd" name="createTimeEnd">
@@ -57,64 +51,21 @@
 			                </div>
 			            </div>
 		            </form>
-		            
 				    <!-- 顯示表格 -->
 	        		<th:block th:insert="/util/jsgrid :: jsgrid"></th:block>
 				</div>
 			</div>
 			<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h4 class="modal-title" id="updateModalTitle"></h4>
 						</div>
 						<div class="wordWrap modal-body">
-							<form id="updateForm">
-					            <div class="search-block">
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='訂單編號：', tagId='updateOrderId', tagName='orderId'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='訂單編號：', tagId='updateOrderNo', tagName='orderNo'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='會員編號：', tagId='updateMemberId', tagName='memberId'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='會員姓名：', tagId='updateMemberName', tagName='memberName'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='產品編號：', tagId='updateProductId', tagName='productId'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='產品名稱：', tagId='updateProductName', tagName='productName'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='購買單價：', tagId='updateProductPrice', tagName='productPrice'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='購買數量：', tagId='updateBuyQuantity', tagName='buyQuantity'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='　總金額：', tagId='updateTotal', tagName='total'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='產品成本：', tagId='updateProductCost', tagName='productCost'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='扣款編號：', tagId='updateWalletId', tagName='walletId'">
-					            	</th:block>
-					            	<th:block th:insert="/util/utilModal :: inputTextReadonly" 
-					            			  th:with="showName='購買日期：', tagId='updateCreateTime', tagName='createTime'">
-					            	</th:block>
-					            </div>
-							</form>
-							<div class="error" id="error"></div>
+							<p id="showMemberOrder"></p>
 						</div>
 						<div class="modal-footer">
 						 	<button type="button" class="btn newbtn-gray" data-bs-dismiss="modal">關閉</button>
-							&nbsp;&nbsp;
-							<button type="button" id="saveConfirmbtn" class="btn btn-primary" onclick="dosave();">儲存</button>
 						</div>
 					</div>
 				</div>
@@ -182,50 +133,43 @@
 					    	if(isquery == 1) {
 					    		isquery = 0;
 					    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    		return queryajax('queryMemberOrder', 'POST', requestData);
+					    		return queryajax('queryWallet', 'POST', requestData);
 					    		
 					    	}
 					    }
 					},
 					fields: [
-						{ name: "orderId", type: "text", visible: false },
-						{ name: "orderNo", type: "text", width: 80 , title:"訂單編號" },
-						{ name: "memberId", type: "text", width: 80 ,title: "會員編號"},
-						{ name: "productId", type: "text", width: 80 , title:"產品編號" },
-						{ name: "productPrice", type: "text", width: 80, title:"購買單價" },
-						{ name: "buyQuantity", type: "text", width: 80 , title:"購買數量" },
+						{ name: "walletId", type: "text", visible: false  },
+						{ name: "walletNo", type: "text", width: 80 ,title: "扣款編號"},
+						{ name: "memberId", type: "text", width: 80 , title:"會員編號" },
 						{
-					    	name: "Total",
-					      	width: 80,
+					    	name: "state",
+					      	width: 50,
 					      	itemTemplate: function(value, item) {
-					        	return item.productPrice * item.buyQuantity;
+					      		if(item.amount > 0) {
+					      			return '存款';
+					      		}
+					        	return '扣款';
 					      	},
-					      	title:"總金額" 
+					      	title:"狀態" 
 					    },
+						{ name: "amount", type: "text", width: 80 , title:"金額" },
+						{ name: "createTime", type: "text", width: 100 , title:"扣款日期" },
 						{ 
 							itemTemplate: function(_, item) {
-				                return $('<button class="update-btn-color">').text("詳細資料")
+								if(item.amount > 0) {
+									return null;
+								}
+				                return $('<button class="update-btn-color">').text("購買明細")
 				                	.on("click", function() {
-				                		$('#updateOrderId').val(item.orderId);
-				                		$('#updateModalTitle').val('會員資料詳細資料');
-				                		let funcurl = /*[[@{/memberorder/getMemberOrder/}]]*/'';
+				                		//$('#updateOrderId').val(item.orderId);
+				                		$('#updateModalTitle').val('扣款詳細資料');
+				                		let funcurl = /*[[@{/memberorder/queryMemberOrderByWalletId/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.orderId,
+				                		    url: funcurl  + item.walletId,
 				                		    success: function (data) {
-				                		    	$('#updateOrderNo').val(data["orderNo"]);
-				                		    	$('#updateMemberId').val(data["memberId"]);
-						                		$('#updateMemberName').val(data["memberName"]);
-						                		$('#updateProductId').val(data["productId"]);
-						                		$('#updateProductName').val(data["productName"]);
-						                		const productPrice = data["productPrice"];
-						                		$('#updateProductPrice').val(productPrice);
-						                		const buyQuantity = data["buyQuantity"];
-						                		$('#updateBuyQuantity').val(buyQuantity);
-						                		$('#updateTotal').val(productPrice * buyQuantity);
-						                		$('#updateProductCost').val(data["productCost"]);
-						                		$('#updateCreateTime').val(data["createTime"]);
-						                		$('#updateWalletId').val(data["walletId"]);
+				                		    	$('#showMemberOrder').html(data["data"]);
 				                		    }
 				                	    });
 				                		$('#updateModal').modal('show');
@@ -244,9 +188,7 @@
 			}
 			function doClearData() {
 				document.getElementById("queryForm").reset();
-				document.getElementById("updateForm").reset();
         		$('#itemsCountDiv').css("display", "none");
-        		$('#error').text("");
 			}
 	    </script>
 	</body>

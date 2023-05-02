@@ -1,13 +1,14 @@
 package com.vendingmachine.frontend.vo;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vendingmachine.backend.vo.JSGridFilter;
 
 import lombok.Data;
@@ -16,35 +17,34 @@ import lombok.ToString;
 
 @Data
 @ToString(callSuper = true)
-@EqualsAndHashCode(of = {"productId"}, callSuper = false)
-public class MemberOrderVo extends JSGridFilter{
+@EqualsAndHashCode(of = {"walletId"}, callSuper = false)
+public class WalletVo extends JSGridFilter{
 
-	private Long orderId;
+	private Long walletId;
 	
-	private String orderNo;
+	private String walletNo;
 	
 	private String memberId;
 	
 	private String memberName;
 	
-	private Long productId;
-	
-	private String productName;
-	
-	private Integer productPrice;
-	
-	private Double productCost;
-	
-	private Integer buyQuantity;
+	private Integer amount;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
-
+	
 	private String createTimeStart;
 	
 	private String createTimeEnd;
+
+	public WalletVo() {
+	}
+
+	public WalletVo(String walletNo, String memberId, Integer amount, Date createTime) {
+		this.walletNo = walletNo;
+		this.memberId = memberId;
+		this.amount = amount;
+		this.createTime = createTime;
+	}
 	
-	private Long walletId;
-	
-	private Integer total;
 }

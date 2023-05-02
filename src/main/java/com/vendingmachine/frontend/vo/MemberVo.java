@@ -17,7 +17,7 @@ import lombok.ToString;
 
 @Data
 @ToString(callSuper = true)
-@EqualsAndHashCode(of = {"productId"}, callSuper = false)
+@EqualsAndHashCode(of = {"memberId"}, callSuper = false)
 public class MemberVo extends JSGridFilter{
 
 	private String memberId;

@@ -42,3 +42,20 @@
 		</div>
 	</div>
 </th:block>
+
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="inputText">
+	<div class="search-block-line">
+            <label>
+                <span class="text" th:text="${showName}" ></span>
+                <input type="text" th:id="${tagId}" th:name="${tagName}" readonly="readonly">
+            </label>
+     </div>
+</th:block>
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="inputTextReadonly">
+	<div class="search-block-line">
+            <label>
+                <span class="text" th:text="${showName}" ></span>
+                <input type="text" th:id="${tagId}" th:name="${tagName}" readonly="readonly">
+            </label>
+     </div>
+</th:block>

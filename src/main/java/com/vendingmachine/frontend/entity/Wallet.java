@@ -12,7 +12,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -25,37 +24,33 @@ import lombok.experimental.SuperBuilder;
 @Data
 @Entity
 @DynamicUpdate
-@Table(name = "MEMBERORDER")	
-public class MemberOrder  implements Serializable {
+@Table(name = "WALLET")	
+public class Wallet implements Serializable {
 
 	@Id
-	@SequenceGenerator(name = "MEMBERORDER_SEQ", sequenceName = "MEMBERORDER_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBERORDER_SEQ")
-	@Column(name = "ORDER_ID")
-	private Long orderId;
+	@SequenceGenerator(name = "WALLET_SEQ", sequenceName = "WALLET_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WALLET_SEQ")
+	@Column(name = "WALLET_ID")
+	private Long walletId;
 	
-	@Column(name = "ORDER_NO")
-	private String orderNo;
+	@Column(name = "WALLET_NO")
+	private String walletNo;
 	
 	@Column(name = "MEMBER_ID")
 	private String memberId;
 	
-	@Column(name = "PRODUCT_ID")
-	private Long productId;
+	@Column(name = "AMOUNT")
+	private Integer amount;
 	
-	@Column(name = "PRODUCT_PRICE")
-	private Integer productPrice;
-	
-	@Column(name = "PRODUCT_COST")
-	private Double productCost;
-	
-	@Column(name = "BUY_QUANTITY")
-	private Integer buyQuantity;
-	
-	@Column(name = "CREATE_TIME")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column(name = "UPDATE_TIME")
+	private Date updateTime;
+	
+	@Column(name = "UPDATE_USER")
+	private String updateUser;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column(name = "CREATE_TIME")
 	private Date createTime;
 	
-	@Column(name = "WALLET_ID")
-	private Long walletId;
 }

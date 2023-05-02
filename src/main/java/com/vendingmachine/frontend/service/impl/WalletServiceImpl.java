@@ -27,23 +27,27 @@ import com.vendingmachine.backend.vo.ProductVo;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.frontend.entity.Member;
 import com.vendingmachine.frontend.entity.MemberOrder;
+import com.vendingmachine.frontend.entity.Wallet;
 import com.vendingmachine.frontend.repositories.MemberOrderRepository;
 import com.vendingmachine.frontend.repositories.MemberRepository;
+import com.vendingmachine.frontend.repositories.WalletRepository;
 import com.vendingmachine.frontend.service.MemberOrderService;
 import com.vendingmachine.frontend.service.MemberService;
+import com.vendingmachine.frontend.service.WalletService;
 import com.vendingmachine.frontend.vo.MemberOrderVo;
 import com.vendingmachine.frontend.vo.MemberVo;
+import com.vendingmachine.frontend.vo.WalletVo;
 import com.vendingmachine.util.BeanCopyUtil;
+import com.vendingmachine.util.CheckVoDate;
 import com.vendingmachine.util.StringUtil;
 import com.vendingmachine.util.ValidateUtil;
 
 @Service
-public class MemberServiceImpl implements MemberService {
+public class WalletServiceImpl implements WalletService {
 
 	@Autowired
-	private MemberRepository memberRepository;
+	private WalletRepository walletRepository;
 
-	
 	@Autowired
 	private StringUtil StringUtil;
 	
@@ -54,59 +58,58 @@ public class MemberServiceImpl implements MemberService {
 	String filePath;
 	
 	@Override
-	public Page<Member> queryMember(MemberVo memberVo) {
-		checkData(memberVo);
-		Page<Member> members = memberRepository.queryMember(memberVo.getMemberId(), 
-															memberVo.getMemberName(), 
-															memberVo.getEnabled(), 
-															memberVo.convertPageable());
-		return members;
+	public Page<Wallet> queryWallet(WalletVo walletVo) {
+		checkData(walletVo);
+		Page<Wallet> wallets = walletRepository.queryWallet(walletVo.getWalletId(), 
+															walletVo.getWalletNo(), 
+															walletVo.getMemberId(), 
+															walletVo.getCreateTimeStart(), 
+															walletVo.getCreateTimeEnd(), 
+															walletVo.convertPageable());
+		return wallets;
 	}
 
 	@Override
-	public Member getMember(String id) {
-		Optional<Member> memberOrder = memberRepository.findById(id);
-		if(memberOrder.isPresent()) {
-			return memberOrder.get();
+	public Wallet getWallet(Long id) {
+		Optional<Wallet> wallet = walletRepository.findById(id);
+		if(wallet.isPresent()) {
+			return wallet.get();
 		}
 		return null;
 	}	
+	
+	private void checkData(WalletVo walletVo) {
 
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	public String save(MemberVo memberVo, String func) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		String enableStr = memberVo.getEnabled() == null ? "0" : "1";
-		memberVo.setEnabled(enableStr);
-		
-		Member member = BeanCopyUtil.copyBean(memberVo, Member.class);
-		if(func.equals("新增")) {
-			member.setCreateTime(new Date());
-			member.setCreateUser(username);
-    	} else {
-    		Member dbMember = getMember(member.getMemberId());
-    		member.setMemberPassword(dbMember.getMemberPassword());
-    		member.setCreateTime(dbMember.getCreateTime());
-			member.setCreateUser(dbMember.getCreateUser());
-    		member.setUpdateTime(new Date());
-    		member.setUpdateUser(username);
-    	}
-		Member memberSaveResp = memberRepository.save(member);
-		if(memberSaveResp == null) {
-			return func +"功能資料失敗";
+		if(validateUtil.isNotBlank(walletVo.getMemberId())) {
+			walletVo.setMemberId(StringUtil.addPercentage(walletVo.getMemberId(), 3));
 		}
-    	return func +"功能資料成功";
+		CheckVoDate checkVoDate = new CheckVoDate(walletVo.getCreateTimeStart(), walletVo.getCreateTimeEnd());
+		walletVo.setCreateTimeStart(checkVoDate.getCreateTimeStart());
+		walletVo.setCreateTimeEnd(checkVoDate.getCreateTimeEnd());
 	}
 	
-	private void checkData(MemberVo memberVo) {
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Wallet updateWallet(WalletVo walletVo, String func) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		
+		Wallet wallet = BeanCopyUtil.copyBean(walletVo, Wallet.class);
+		
+    		//Member dbMember = getMember(member.getMemberId());
 
-		if(validateUtil.isNotBlank(memberVo.getMemberId())) {
-			memberVo.setMemberId(StringUtil.addPercentage(memberVo.getMemberId(), 3));
+		wallet.setUpdateTime(new Date());
+		wallet.setUpdateUser(username);
+    	
+		Wallet walletSaveResp = walletRepository.save(wallet);
+		if(walletSaveResp == null) {
+			return null;
 		}
-		if(validateUtil.isNotBlank(memberVo.getMemberName())) {
-			memberVo.setMemberName(StringUtil.addPercentage(memberVo.getMemberName(), 3));
-		}
+    	return walletSaveResp;
+	}
+
+	@Override
+	public Long getBalance(String memberId) {
+		return walletRepository.getBalance(memberId);
 	}
 }

@@ -1,5 +1,7 @@
 package com.vendingmachine.frontend.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.vendingmachine.frontend.entity.MemberOrder;
@@ -9,7 +11,11 @@ public interface MemberOrderService {
 	
 	Page<MemberOrder> queryMemberOrder(MemberOrderVo memberOrderVo);
 	
-	MemberOrder getMemberOrder(String id);
+	MemberOrder getMemberOrder(Long id);
 	
-	String save(MemberOrderVo memberOrderVo, String func);
+	List<MemberOrder> addMemberOrder(List<MemberOrderVo> memberOrderVo);
+	
+	List<MemberOrder> queryMemberOrderByMemberId(String memberId);
+	
+	List<MemberOrder> queryMemberOrderByWalletId(Long walletId);
 }

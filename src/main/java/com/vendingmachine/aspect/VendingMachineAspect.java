@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.vendingmachine.backend.vo.ErrorMsg;
+import com.vendingmachine.exception.InsufficientBalanceException;
 import com.vendingmachine.exception.LoginErrorException;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.exception.TimeFormatException;
@@ -50,7 +51,9 @@ public class VendingMachineAspect {
 			result = new ResponseEntity<ErrorMsg>(new ErrorMsg(e.getCode(), "E00002", e.getMessage()), HttpStatus.BAD_REQUEST);
 		} catch (TimeFormatException e) {
 			result = new ResponseEntity<ErrorMsg>(new ErrorMsg(e.getCode(), "E00003", e.getMessage()), HttpStatus.BAD_REQUEST);
-		} catch (Throwable e) {
+		} catch (InsufficientBalanceException e) {
+			result = new ResponseEntity<ErrorMsg>(new ErrorMsg(e.getCode(), "E00004", e.getMessage()), HttpStatus.BAD_REQUEST);
+		}catch (Throwable e) {
 			logger.error("sessionAndExceptionCont ERROR", e);
 			System.out.println("Throwable");
 			//createLog(e.getMessage(), "500", methodName, "2", "1", e);

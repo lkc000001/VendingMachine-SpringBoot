@@ -91,9 +91,4 @@ public class ValidateUtil {
 
         return true;
     }
-
-    /*public String checkBetweenNumber(Integer start, Integer end) {
-		
-	}*/
-
 }

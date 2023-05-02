@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @Data
-public  class JSGridFilter {
+public class JSGridFilter {
 	@Transient
 	private int pageIndex;
 	
