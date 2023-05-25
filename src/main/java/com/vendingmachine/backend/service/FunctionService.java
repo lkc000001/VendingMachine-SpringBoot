@@ -22,4 +22,6 @@ public interface FunctionService {
 	String save(FunctionVo functionVo, String func);
 	
 	Map<String,List<Function>> navBarFunctionList();
+	
+	List<Function> findAll();
 }

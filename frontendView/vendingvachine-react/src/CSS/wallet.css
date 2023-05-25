@@ -1,0 +1,63 @@
+/* 搜尋框 */
+.search-block{
+    /* height: 135px; */
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    padding: 5px 20px;
+    position: relative;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    margin-bottom: 5px;
+}
+.search-block .search-block-line{
+    display: flex;
+    margin: 5px 0;
+    align-items: center;
+    justify-content: space-between;
+}
+.search-block .search-block-line .text{
+    font-weight: 600;
+}
+.search-block .search-block-line.btnventer{
+    justify-content: right;
+}
+
+.search-block .search-block-line label{
+    margin-bottom: 10px;
+}
+
+.search-block-line-title {
+    text-align: center; 
+    display:block !important;
+    font-size: 24px;
+}
+
+/* 按鈕樣式*/
+.btn.searchbtn{
+    width: 90px;
+    /* height: 40px; */
+}
+
+.btn{
+    padding: 2px 18px;
+    font-weight: 600;
+}
+.btn:focus{
+    color: #fff;
+}
+.newbtn-blue{
+    color: #fff;
+    background-color: #149DCC;
+    border: 2px solid #1380A5;
+}
+    .newbtn-blue:hover{
+        color: #fff;
+        background-color: #3F83B4;
+    }
+    .newbtn-blue:focus, .newbtn-blue.focus {
+        box-shadow: 0 0 0 0.2rem #4b98cf80;
+    }
+    .newbtn-blue.disabled, .newbtn-blue:disabled {
+        color: #fff;
+        background-color: #707070;
+        border-color:#505050;
+    }

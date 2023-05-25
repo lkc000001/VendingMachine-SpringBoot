@@ -282,6 +282,15 @@
 				                		$('#updateModal').modal('show');
 				                	});
 				          	}, sorting: false, width: 60
+						},
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="perm-btn-color">').text("權限")
+				                	.on("click", function() {
+				                		const contextPath = /*[[@{/permissions/}]]*/ '';
+				                		window.location.href = contextPath + item.userId;
+				                	});
+				          	}, sorting: false, width: 60
 						}
 					]
 				})

@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class DB_DataSourceConfig {
 
-   
-   
-   
    @Primary
    @Bean(name = "mssql")
    @ConfigurationProperties(prefix = "springboot.datasource.mssql")

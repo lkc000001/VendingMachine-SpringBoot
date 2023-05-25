@@ -1,5 +1,7 @@
 package com.vendingmachine.backend.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,4 +19,6 @@ public interface ProductService {
 	boolean isFileExists(String fileName);
 	
 	String save(ProductVo productVo, String func);
+	
+	List<String> getProductClassify();
 }

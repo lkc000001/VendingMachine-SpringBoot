@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +28,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	ValidateUtil validateUtil;
 	
+	@Autowired
+	HttpSession session;
+	
     @Override
     public UserDetails loadUserByUsername(String username) {
-    	System.out.println(username);
     	AppUser user = userRepository.findByAccount(username);
     	String pwd = "";
     	String authority = "";
@@ -44,6 +47,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     				.map(SimpleGrantedAuthority::new)
     				//.map(role -> new SimpleGrantedAuthority(role))
     				.collect(Collectors.toList());
+    		
+    		user.setPwd("");
+    		session.setAttribute("appUser", user);
     	}
     	
     	UserDetails userDetails = new User(username, pwd, 

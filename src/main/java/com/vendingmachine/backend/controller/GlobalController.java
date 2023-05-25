@@ -15,9 +15,11 @@ import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.repositories.FunctionRepository;
 import com.vendingmachine.backend.service.FunctionService;
@@ -47,7 +49,9 @@ public class GlobalController {
 	
 	/*@ModelAttribute(name = "appUser")
 	public AppUser getAppUser(final Authentication authentication) {
-		return userService.getSecurityUser(authentication);
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		
+		return userDetails = (UserDetails) authentication.getPrincipal();
 	}*/
 	
 }

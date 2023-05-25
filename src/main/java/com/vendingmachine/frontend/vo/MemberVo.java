@@ -1,6 +1,7 @@
 package com.vendingmachine.frontend.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 
@@ -33,4 +34,6 @@ public class MemberVo extends JSGridFilter{
 	private String memberPhone;
 	
 	private String enabled;
+	
+	private List<MemberOrderVo> shoppingCart;
 }

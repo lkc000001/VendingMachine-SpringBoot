@@ -18,4 +18,6 @@ public interface MemberOrderService {
 	List<MemberOrder> queryMemberOrderByMemberId(String memberId);
 	
 	List<MemberOrder> queryMemberOrderByWalletId(Long walletId);
+	
+	List<MemberOrder> queryMemberOrderList(MemberOrderVo memberOrderVo);
 }

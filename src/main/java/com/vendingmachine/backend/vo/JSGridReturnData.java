@@ -12,4 +12,6 @@ public class JSGridReturnData<T> {
 	private List<T> data;    
 	
 	private long itemsCount;
+	
+	private Integer maxPage;
 }

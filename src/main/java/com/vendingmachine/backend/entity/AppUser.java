@@ -65,4 +65,7 @@ public class AppUser implements Serializable {
 	
 	@Column(name = "createuser")
 	private String createUser;
+	
+	@Column(name = "role")
+	private String role;
 }

@@ -28,8 +28,6 @@ import lombok.experimental.SuperBuilder;
 public class Member implements Serializable {
 
 	@Id
-	@SequenceGenerator(name = "MEMBER_SEQ", sequenceName = "MEMBER_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ")
 	@Column(name = "MEMBER_ID")
 	private String memberId;
 	

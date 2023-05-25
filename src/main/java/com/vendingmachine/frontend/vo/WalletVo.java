@@ -36,6 +36,8 @@ public class WalletVo extends JSGridFilter{
 	private String createTimeStart;
 	
 	private String createTimeEnd;
+	
+	private Long balance;
 
 	public WalletVo() {
 	}

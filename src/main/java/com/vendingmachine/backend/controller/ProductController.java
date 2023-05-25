@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import com.vendingmachine.backend.vo.ProductVo;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 
+@CrossOrigin(value = "http://localhost:3000/")
 @Controller
 @RequestMapping(value = "/product")
 public class ProductController {
@@ -50,7 +52,9 @@ public class ProductController {
 		}
 		
 		List<ProductVo> productVos = BeanCopyUtil.copyBeanList(productPage.getContent(), ProductVo.class);
-		return ResponseEntity.ok(new JSGridReturnData<ProductVo>(productVos, productPage.getTotalElements()));
+		long totalCount = productPage.getTotalElements();
+		int totalPage = (int) Math.ceil((double) totalCount / (double) productVo.getPageSize());
+		return ResponseEntity.ok(new JSGridReturnData<ProductVo>(productVos, totalCount, totalPage));
     }
 	
 	@GetMapping(path = "/getProduct/{id}")
@@ -75,7 +79,6 @@ public class ProductController {
 	@GetMapping(path = "/isFileExists/{fileName}")
 	@ResponseBody
     public ResponseEntity<Boolean> isFileExists(@PathVariable("fileName") String fileName) {
-		System.out.println(fileName);
 		boolean exists = productService.isFileExists(fileName);
     	return ResponseEntity.ok(exists);
     }

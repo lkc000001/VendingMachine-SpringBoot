@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,7 @@ import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.repositories.ProductRepository;
 import com.vendingmachine.backend.service.ProductService;
 import com.vendingmachine.backend.vo.JSGridReturnData;
+import com.vendingmachine.backend.vo.ProductClassifyProjection;
 import com.vendingmachine.backend.vo.ProductVo;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
@@ -47,6 +49,15 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Product> queryProduct(ProductVo productVo) {
 		checkData(productVo);
+		String startDate = productVo.getCreateTimeStart();
+		String endDate = productVo.getCreateTimeEnd();
+		if (validateUtil.isNotBlank(startDate)) {
+			productVo.setCreateTimeStart(startDate + " 00:00:00.000");
+		}
+		if (validateUtil.isNotBlank(endDate)) {
+			productVo.setCreateTimeEnd(endDate + " 23:59:59.997");
+		}
+		System.out.println(productVo);
 		Page<Product> products = productRepository.queryProduct(productVo.getProductId(),
 																  productVo.getProductName(),
 																  productVo.getClassify(),
@@ -56,6 +67,8 @@ public class ProductServiceImpl implements ProductService {
 																  productVo.getCostEnd(),
 																  productVo.getImage(),
 																  productVo.getEnabled(),
+																  productVo.getCreateTimeStart(),
+																  productVo.getCreateTimeEnd(),
 																  productVo.convertPageable());
 		
 		return products;
@@ -93,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public String save(ProductVo productVo, String func) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		if("changeImage".equals(productVo.getChangeImage())) {
 			boolean uploadedFileResp =saveUploadedFile(productVo.getUploadFile());
 			if(!uploadedFileResp) {
@@ -120,6 +133,18 @@ public class ProductServiceImpl implements ProductService {
     	return func +"功能資料成功";
 	}
 	
+	@Override
+	public List<String> getProductClassify() {
+		// return productRepository.getProductClassify();
+		List<ProductClassifyProjection> projections =  productRepository.findByEnabled("1");
+		List<String> classifyList = projections.stream()
+				.collect(Collectors.groupingBy(ProductClassifyProjection::getClassify))
+				.entrySet().stream()
+				.map(entry -> entry.getKey())
+		        .collect(Collectors.toList()); 
+		return classifyList;
+	}
+	
 	private void checkData(ProductVo productVo) {
 
 		if(validateUtil.isNotBlank(productVo.getProductName())) {
@@ -132,4 +157,8 @@ public class ProductServiceImpl implements ProductService {
 			productVo.setImage(StringUtil.addPercentage(productVo.getImage(), 3));
 		}
 	}
+
+	
+
+	
 }

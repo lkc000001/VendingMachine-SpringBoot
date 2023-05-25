@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<title>使用者權限管理</title>
+		<!-- 載入CSS -->
+		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
+	</head>
+	
+	<body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-collapseX sidebar-collapse" style="height: auto;">
+		<div class="wrapper">
+			 <!-- Header -->
+	        <th:block th:insert="/util/header :: header"></th:block>
+	        
+	        <!-- 主選單 -->
+	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        
+	        <div class="content-wrapper">
+		        <div class="main-content">
+					<div class="main-title">
+				        <span class="title-text" id="showtitle">使用者權限管理</span>
+				    </div>
+				    <!-- 搜尋bar -->
+		            <form class="queryForm" id="queryForm" name="queryForm">
+			            <div class="search-block">
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >編　　號：</span>
+			                            <input type="text" id="userId" th:value="${permissionsUser.userId}">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >帳　　號：</span>
+			                            <input type="text" th:value="${permissionsUser.account}">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >員工編號：</span>
+			                            <input type="number" th:value="${permissionsUser.accountId}">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >員工姓名：</span>
+			                            <input type="text" th:value="${permissionsUser.name}">     
+			                        </label>
+			                    </div>
+			                </div>
+			                <div class="search-block-line">
+			                    <div>
+			                    	<label>
+			                            <span class="text" >群　　組：</span>
+			                            <input type="text" th:value="${permissionsUser.groupName}">
+			                        </label>
+			                    	&nbsp;&nbsp;&nbsp;&nbsp;
+			                    	<label>
+			                            <span class="text" >部　　門：</span>
+			                            <input type="text" th:value="${permissionsUser.branch}">     
+			                        </label>
+			                    </div>
+			                </div>
+			            </div>
+		            </form>
+				    
+				    <form id="myForm" name="myForm" method="POST" action="<%=request.getContextPath()%>/apiGLPermission/get">
+			            <div class="search-block mt-3">
+			            	<caption>權限設定表</caption>
+			                <table class="permtable mt-3" id="myTable" name="myTable">
+			                	<thead>
+									<tr>
+										<th width=10%>序號</th><th width=30%>功能</th><th width=10%>啟用</th>
+										<th width=10%>序號</th><th width=30%>功能</th><th width=10%>啟用</th>
+									</tr>
+								</thead>
+				                <tbody>
+									<th:block th:each="func, status : ${functionsTable}">
+									    <tr th:if="${status.index % 2 == 0}">
+									    	<td th:text="${func.userfunctionid}" class="controlhidden">userfunctionid</td>
+									        <td th:text="${func.functionid}">序號</td>
+									        <td th:text="${func.functionshowname}">顯示名稱</td>
+									        <td><input type="checkbox" th:value="${func.permissionenabled}" th:checked="${func.permissionenabled == '1'}"></td>
+									        <th:block th:if="${functionsTable.size() != (status.index + 1) }" th:with="functionTowItem=${functionsTable[status.index + 1]}">
+										        <td th:text="${functionTowItem.userfunctionid}" class="controlhidden">userfunctionid</td>
+										        <td th:text="${functionTowItem.functionid}">序號</td>
+										        <td th:text="${functionTowItem.functionshowname}">顯示名稱</td>
+										        <td><input type="checkbox" th:value="${functionTowItem.permissionenabled}" th:checked="${functionTowItem.permissionenabled == '1'}"></td>
+									        </th:block>
+									    </tr>
+									</th:block>
+				                </tbody>
+			                </table>
+			                <div class="search-block-line btnventer">
+			                	<div class="btn searchbtn newbtn-gray" onclick="doreturn();">返回</div>
+			                    &nbsp;&nbsp;
+			                    <div class="btn searchbtn newbtn-yellow" onclick="doupdate();">修改</div>
+			                </div>
+			            </div>
+		            </form>
+		            
+				</div>
+			</div>
+			
+			<!-- Modal -->
+	        <th:block th:insert="/util/utilModal :: utilModal"></th:block>
+			<!-- footer -->
+	        <th:block th:insert="/util/footer :: footer"></th:block>
+	    </div>
+	    <!-- 載入TS -->
+	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
+		<script th:inline="javascript">
+		
+			$(document).ready(function() {
+				//doClear()
+				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
+				if(saveRespMsg != null){
+					showMsg("", saveRespMsg);
+					saveRespMsg = null;
+				}
+			});
+			
+			function doupdate() {
+				let data = [];
+				const userid = $('#userId').val();
+				
+				$("#myTable tbody tr").each(function() {
+				    const row = $(this);
+					let index = 1;
+				    var userfunction = {};
+				    // 遍历当前行的单元格
+				    row.find("td").each(function() {
+				    	if(index === 1 || index === 5 ) {
+				    		userfunction = {};
+				    	}
+				    	
+				    	let key = '';
+				    	let value = $(this).text();
+				    	
+				    	switch (index) {
+				    	case 1:
+				    		let userFunctionid = parseInt(value)
+				    		if(Number.isNaN(userFunctionid)) {
+				    			userFunctionid = null;
+							}
+				    		userfunction["userFunctionId"] = userFunctionid;
+				    		break;
+						case 2:
+							let functionid = parseInt(value)
+							if(Number.isNaN(functionid)) {
+								functionid = null;
+							}
+							userfunction["functionId"] = functionid;
+				    		break;
+						case 3:
+							userfunction["userId"] = parseInt(userid);
+				    		break;
+						case 4:
+							
+							userfunction["enabled"] = $(this).find(":checkbox").val();
+				    		break;
+				    	}
+				    	//console.log(userfunction);
+				    	
+						
+				    	if(index % 4 == 0) {
+				    		index = 0;
+				    		data.push(userfunction);
+				    	}
+				    	index ++;
+				    });
+				    //data.push(userfunction);
+				});
+				console.log(data); 
+			}
+
+			function deleteConfirm() {
+				deleteConfirmMsg("刪除確認", "確認刪除帳號:" + $('#updateAccount').val())
+			}
+			
+			function dodelete() {
+				let userId = $('#updateUserId').val();
+				const deleteUrl = /*[[@{/appUser/delete/}]]*/'';
+           		$.ajax({
+					url: deleteUrl + userId,
+					type: 'DELETE',
+					success: function(data) {
+						$('#updateModal').modal('hide');
+						doClearData();
+						showMsg("刪除結果", data);
+                    }
+                })
+			}
+			
+			function doquery() {
+				dojsGrid();
+			}
+			
+			//顯示查詢結果
+			function dojsGrid() {
+				let showcount = $('#showcount').val();
+				let message = "無資料";
+				
+				$("#jsGrid").jsGrid({
+				    width: "100%",
+				    height: "auto",
+		
+				    inserting: false,
+				    editing: false,
+				    sorting: true,
+				    paging: true,
+				    
+				    autoload: true,
+				    
+				    pageLoading: true,
+				    pageIndex: 1,
+				    pageSize: showcount,
+				    pageButtonCount: 5,
+				    pagerFormat: "頁數: {first} {prev} {pages} {next} {last} &nbsp;&nbsp; {pageIndex} / {pageCount}",
+				    pagePrevText: "上一頁",
+				    pageNextText: "下一頁",
+				    pageFirstText: "第一頁",
+				    pageLastText: "最後頁",
+				    
+				    noDataContent: message,
+				    controller:
+					{
+					    loadData: function(filter) {
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	return queryajax('queryAppUser', 'POST', requestData);
+					    }
+					},
+					fields: [
+						{ name: "userId", type: "text", width: 50 , title:"編號" },
+						{ name: "name", type: "text", width: 80 , title:"員工姓名" },
+						{ name: "account", type: "text", width: 80 ,title: "帳號"},
+						{ name: "accountId", type: "text", width: 80 , title:"員工編號" },
+						{ name: "groupName", type: "text", width: 80, title:"群組"},
+						{ name: "branch", type: "text", width: 80, title:"部門" },
+						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="update-btn-color">').text("編輯")
+				                	.on("click", function() {
+				                		$('#updateUserId').val(item.userId);
+				                		setShowItem('UPDATE');
+				                		const funcurl = /*[[@{/appUser/getAppUser/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl + item.userId,
+				                		    success: function (data) {
+				                		    	$('#updateUserId').val(data["userId"]);
+						                		$('#updateAccount').val(data["account"]);
+						                		$('#updateAccountId').val(data["accountId"]);
+						                		$('#updateName').val(data["name"]);
+						                		$('#updateGroupName').val((data["groupName"]));
+						                		$('#updateBranch').val((data["branch"]));
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						},
+						{ 
+							itemTemplate: function(_, item) {
+				                return $('<button class="perm-btn-color">').text("權限")
+				                	.on("click", function() {
+				                		$('#updateUserId').val(item.userId);
+				                		setShowItem('UPDATE');
+				                		const funcurl = /*[[@{/appUser/getAppUser/}]]*/'';
+				                		$.ajax({
+				                		    type: "GET",
+				                		    url: funcurl + item.userId,
+				                		    success: function (data) {
+				                		    	$('#updateUserId').val(data["userId"]);
+						                		$('#updateAccount').val(data["account"]);
+						                		$('#updateAccountId').val(data["accountId"]);
+						                		$('#updateName').val(data["name"]);
+						                		$('#updateGroupName').val((data["groupName"]));
+						                		$('#updateBranch').val((data["branch"]));
+				                		    }
+				                	    });
+				                		$('#updateModal').modal('show');
+				                	});
+				          	}, sorting: false, width: 60
+						}
+					]
+				})
+			}
+
+			function doClearData() {
+				$('#purchaseIddvi').css("display", "none");
+				
+				document.getElementById("queryForm").reset();
+				document.getElementById("updateForm").reset();
+				$('#updateEnabled').prop('checked', true);
+        		
+        		$('#error').text("");
+        		$('#showImageDiv').css("display", "none");
+        		$('#deleteModal').modal('hide');
+			}
+
+			function checkData() {
+				const updateAccount = $('#updateAccount').val().trim();
+				if (updateAccount == "") {
+					$('#error').text("帳號不可空白");
+					return false;
+				}
+				const updatePwd = $('#updatePwd').val().trim();
+				if ($('#updateUserId').val() == "" && updatePwd == "" ) {
+					$('#error').text("密碼不可空白");
+					return false;
+				}
+				return true;
+			}
+			
+			function setShowItem(value) {
+				const title = value == "ADD" ? "採購商品訂單" : "修改採購訂單";
+				const addNone = value == "ADD" ? "none" : "inline";
+				const addInline = value == "ADD" ? "inline" : "none";
+				const method = value == "ADD" ? "POST" : "PUT";
+				if(value == "ADD") {
+					$('#updateAccount').prop("readonly", "");
+					$('#updateAccount').removeClass("modal-readonly");
+				} else {
+					$('#updateAccount').prop("readonly", "readonly");
+					$('#updateAccount').addClass("modal-readonly");
+				}
+				
+				$('#updateModalTitle').val(title);
+				$('#appUserDiv').css("display", addNone);
+				$('#pwdDiv').css("display", addInline);
+				$('#deleteConfirmbtn').css("display", addNone);
+				$('#_method').val(method);
+			}
+
+	    </script>
+	</body>
+</html>

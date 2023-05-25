@@ -15,15 +15,19 @@
 		    <div class="member-block">
 		        <div class="member">
 		            <!-- <div class="num">員工編號：000000</div> -->
-		            <div class="name">姓名：<span >員工編號：</span></div>
+		            <div>
+		            	<span >姓名：</span>
+		            	<span th:if="${session.appUser != null}" th:text="${session.appUser.name}" ></span>
+		            	<span >  員工編號：</span>
+		            	<span th:if="${session.appUser != null}" th:text="${session.appUser.accountId}" ></span>
+		            </div>
 		            <div class="membericon"><i class="fa-solid fa-circle-chevron-down"></i></div>
 		        </div>     
 		        <div class="Competence" id="Competence">
 		            <div>
-		                <div class="Competence-line" >分行/部門代碼：</div>
-		                <div class="Competence-line" >群組名稱：</div>
-		                <div class="Competence-line" >帳號序號：</div>
-		                <div class="Competence-line" >帳號名稱：</div>
+		                <div class="Competence-line" >分行/部門代碼：<span th:if="${session.appUser != null}" th:text="${session.appUser.branch}" /></div>
+		                <div class="Competence-line" >群組名稱：<span th:if="${session.appUser != null}" th:text="${session.appUser.groupName}" /></div>
+		                <div class="Competence-line" >帳號名稱：<span th:if="${session.appUser != null}" th:text="${session.appUser.account}" /></div>
 		
 		                <a th:href="@{/logout}" class=" btn newbtn-gary Competence-btn">登出</a>
 		            </div>

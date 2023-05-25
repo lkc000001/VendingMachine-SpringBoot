@@ -13,4 +13,6 @@ public interface MemberService {
 	Member getMember(String id);
 	
 	String save(MemberVo memberVo, String func);
+	
+	boolean checkMembetId(String id);
 }

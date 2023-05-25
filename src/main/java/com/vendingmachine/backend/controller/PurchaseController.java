@@ -50,7 +50,9 @@ public class PurchaseController {
 		}
 		
 		List<PurchaseVo> purchaseVos = BeanCopyUtil.copyBeanList(purchasePage.getContent(), PurchaseVo.class);
-		return ResponseEntity.ok(new JSGridReturnData<PurchaseVo>(purchaseVos, purchasePage.getTotalElements()));
+		long totalCount = purchasePage.getTotalElements();
+		int totalPage = (int) Math.ceil((double) totalCount / (double) purchaseVo.getPageSize());
+		return ResponseEntity.ok(new JSGridReturnData<PurchaseVo>(purchaseVos, totalCount, totalPage));
     }
 	
 	@GetMapping(path = "/getPurchase/{id}")

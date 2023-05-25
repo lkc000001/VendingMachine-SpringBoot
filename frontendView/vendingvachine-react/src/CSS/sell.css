@@ -1,0 +1,120 @@
+.main-body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.content {
+    flex: 1;
+    padding: 20px 100px 5px 100px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+main {
+    height: 80%;
+}
+
+.width60 {
+    width: 60%;
+}
+
+.displayInline {
+    display: inline-block;
+}
+/* card */
+.cardWidth {
+    width: 29%;
+}
+
+.cardText {
+    font-family: "微軟正黑體",sans-serif;
+    font-size: 20px;
+}
+
+.cardImage {
+    width: 60%;
+    max-height: 200px;
+    margin: auto;
+    display: block;
+}
+
+.cardBtn {
+    margin: auto;
+    display: block;
+    width: 60%;
+}
+
+.cardTitle {
+    font-family: "微軟正黑體",sans-serif;
+    font-size: 26px;
+    text-align:center;
+    font-weight:100;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.beforePageDisplay {
+    display: none;
+}
+
+.afterPageDisplay {
+    display: none;
+}
+
+/* header */
+.nav-title{
+    font-weight: 600;
+    color: #7f7f7f !important;
+    font-size: 20px;
+    line-height: 22px;
+}
+.backgroundWhite {
+   background-color: white;
+}
+
+.customLink {
+    cursor: default !important;
+}
+  
+/* 右方主要內容區 */
+.content-wrapper{
+    padding: 10px !important;
+}
+.content-wrapper .main-content{
+    height: calc(100vh - 115px);
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.shoppingListTd {
+    vertical-align: middle !important;
+}
+
+.insufficientBalance {
+    color: red;
+}
+
+.btnX {
+    width: 40px;
+    padding: 1px !important;
+}
+
+.showright{
+	float: right;
+}

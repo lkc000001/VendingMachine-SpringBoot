@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vendingmachine.backend.entity.Product;
+import com.vendingmachine.backend.repositories.ProductRepository;
 import com.vendingmachine.exception.InsufficientBalanceException;
 import com.vendingmachine.frontend.entity.MemberOrder;
 import com.vendingmachine.frontend.entity.Wallet;
@@ -33,6 +35,9 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	private WalletRepository walletRepository;
 	
 	@Autowired
+	private ProductRepository productRepository;
+	
+	@Autowired
 	private StringUtil StringUtil;
 	
 	@Autowired
@@ -43,7 +48,8 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	
 	@Override
 	public Page<MemberOrder> queryMemberOrder(MemberOrderVo memberOrderVo) {
-		checkData(memberOrderVo);
+		//checkData(memberOrderVo);
+		System.out.println(memberOrderVo);
 		Page<MemberOrder> memberOrders = memberOrderRepository.queryMemberOrder(memberOrderVo.getOrderNo(), 
 																				memberOrderVo.getMemberId(), 
 																				memberOrderVo.getProductId(), 
@@ -82,6 +88,16 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 		}) ;
 		//儲存購買清單
 		List<MemberOrder> memberOrderSaveResp = memberOrderRepository.saveAll(memberOrder);
+		//扣除庫存
+		memberOrderVo.forEach(m -> {
+			Optional<Product> productOptional = productRepository.findById(m.getProductId());
+			if(productOptional.isPresent()) {
+				Product product = productOptional.get();
+				Integer stock = product.getStock();
+				product.setStock(stock - m.getBuyQuantity());
+			}
+		});
+		
     	return memberOrderSaveResp;
 	}
 	
@@ -109,6 +125,9 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	private void checkData(MemberOrderVo memberOrderVo) {
 		if(validateUtil.isNotBlank(memberOrderVo.getOrderNo())) {
 			memberOrderVo.setOrderNo(StringUtil.addPercentage(memberOrderVo.getOrderNo(), 3));
+		} 
+		else {
+			memberOrderVo.setOrderNo(null);
 		}
 	}
 
@@ -120,5 +139,15 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	@Override
 	public List<MemberOrder> queryMemberOrderByWalletId(Long walletId) {
 		return memberOrderRepository.findByWalletId(walletId);
+	}
+	
+	public List<MemberOrder> queryMemberOrderList(MemberOrderVo memberOrderVo) {
+		List<MemberOrder> memberOrders = memberOrderRepository.queryMemberOrderList(memberOrderVo.getOrderNo(), 
+																				memberOrderVo.getMemberId(), 
+																				memberOrderVo.getProductId(), 
+																				memberOrderVo.getCreateTimeStart(), 
+																				memberOrderVo.getCreateTimeEnd());
+		
+		return memberOrders;
 	}
 }

@@ -130,6 +130,11 @@ public class FunctionServiceImpl implements FunctionService {
 		return functionMap;
 	}
 	
+	@Override
+	public List<Function> findAll() {
+		return functionRepository.findAll();
+	}
+	
 	private void checkData(FunctionVo functionVo) {
 		if(functionVo.getFunctionName() != null) {
 			functionVo.setFunctionName(StringUtil.addPercentage(functionVo.getFunctionName(), 3));

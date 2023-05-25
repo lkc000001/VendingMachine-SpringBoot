@@ -51,20 +51,16 @@ public class FunctionController {
 		}
 		
 		List<FunctionVo> functionVos = BeanCopyUtil.copyBeanList(functionPage.getContent(), FunctionVo.class);
-    	return ResponseEntity.ok(new JSGridReturnData<FunctionVo>(functionVos, functionPage.getTotalElements()));
+		long totalCount = functionPage.getTotalElements();
+		int totalPage = (int) ((totalCount / functionVo.getPageSize()) + 1);
+		return ResponseEntity.ok(new JSGridReturnData<FunctionVo>(functionVos, totalCount, totalPage));
     }
-
-	/*@PostMapping(path = "/queryAllFunction", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<JSGridReturnData<Function>> queryAllFunction(@RequestBody JSGridFilter jsGridFilter) {
-		JSGridReturnData<Function> functions = functionService.findByAll(jsGridFilter.convertPageable());
-    	return ResponseEntity.ok(functions);
-    }*/
 	
 	@GetMapping(path = "/queryEnableFunction")
 	@ResponseBody
     public ResponseEntity<JSGridReturnData<Function>> queryEnableFunction() {
 		List<Function> functions = functionService.findByEnabled();
-    	return ResponseEntity.ok(new JSGridReturnData<Function>(functions, functions.size()));
+    	return ResponseEntity.ok(new JSGridReturnData<Function>(functions, functions.size(), 1));
     }
 	
 	@GetMapping(path = "/getFunction/{id}")

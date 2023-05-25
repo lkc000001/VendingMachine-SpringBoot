@@ -51,7 +51,9 @@ public class AppUserController {
 		}
 		
 		List<AppUserVo> appUserVos = BeanCopyUtil.copyBeanList(appUserPage.getContent(), AppUserVo.class);
-		return ResponseEntity.ok(new JSGridReturnData<AppUserVo>(appUserVos, appUserPage.getTotalElements()));
+		long totalCount = appUserPage.getTotalElements();
+		int totalPage = (int) ((totalCount / appUserVo.getPageSize()) + 1);
+		return ResponseEntity.ok(new JSGridReturnData<AppUserVo>(appUserVos, totalCount, totalPage));
     }
 	
 	

@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -93,11 +94,7 @@ public class WalletServiceImpl implements WalletService {
 	public Wallet updateWallet(WalletVo walletVo, String func) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		
 		Wallet wallet = BeanCopyUtil.copyBean(walletVo, Wallet.class);
-		
-    		//Member dbMember = getMember(member.getMemberId());
-
 		wallet.setUpdateTime(new Date());
 		wallet.setUpdateUser(username);
     	
@@ -109,7 +106,22 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
+	public Wallet addWallet(WalletVo walletVo) {
+		String walletNoMaxId = walletRepository.getWalletNoMaxId();
+		walletVo.setWalletNo(walletNoMaxId);
+		walletVo.setCreateTime(new Date());
+		Wallet wallet = BeanCopyUtil.copyBean(walletVo, Wallet.class);
+		Wallet walletSaveResp = walletRepository.save(wallet);
+		return walletSaveResp;
+	}
+	
+	@Override
 	public Long getBalance(String memberId) {
 		return walletRepository.getBalance(memberId);
 	}
+
+	@Override
+	public Page<Wallet> findByMemberIdAndAmountGreaterThan(String memberId, Integer Amount, Pageable pageable) {
+		return walletRepository.findByMemberIdAndAmountGreaterThan(memberId, Amount, pageable);
+	}	
 }

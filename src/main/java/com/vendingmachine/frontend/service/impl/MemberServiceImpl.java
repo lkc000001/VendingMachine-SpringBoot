@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +84,9 @@ public class MemberServiceImpl implements MemberService {
 		
 		Member member = BeanCopyUtil.copyBean(memberVo, Member.class);
 		if(func.equals("新增")) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String encodedPassword = encoder.encode(memberVo.getMemberPassword());
+			member.setMemberPassword(encodedPassword);
 			member.setCreateTime(new Date());
 			member.setCreateUser(username);
     	} else {
@@ -95,9 +99,9 @@ public class MemberServiceImpl implements MemberService {
     	}
 		Member memberSaveResp = memberRepository.save(member);
 		if(memberSaveResp == null) {
-			return func +"功能資料失敗";
+			return func +"會員資料失敗";
 		}
-    	return func +"功能資料成功";
+    	return func +"會員資料成功";
 	}
 	
 	private void checkData(MemberVo memberVo) {
@@ -108,5 +112,12 @@ public class MemberServiceImpl implements MemberService {
 		if(validateUtil.isNotBlank(memberVo.getMemberName())) {
 			memberVo.setMemberName(StringUtil.addPercentage(memberVo.getMemberName(), 3));
 		}
+	}
+
+	@Override
+	public boolean checkMembetId(String id) {
+		Optional<Member> member = memberRepository.findById(id);
+		boolean resp = member.isPresent() ? true : false;
+		return resp;
 	}
 }

@@ -1,0 +1,37 @@
+main {
+    display: flex;
+    justify-content: center;
+}
+
+.memberTable {
+    margin-top: 50px;
+    /*border: 1px blue solid;
+    border-collapse:separate;
+    border-radius: 5px;*/
+}
+
+.memberTable td {
+    padding: 10px;
+}
+
+.memberNavColor {
+    background-color: rgb(0, 255, 42) !important;
+}
+
+.navBtn a {
+    color: black !important;
+    background-color: aquamarine;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-radius: 10px;
+    width: 150px;
+    text-align: center;
+}
+
+.justifyContentCenter {
+    justify-content: center !important;
+}
+
+.memberTextR {
+    text-align: right !important;
+}

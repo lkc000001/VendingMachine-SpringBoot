@@ -1,5 +1,7 @@
 package com.vendingmachine.frontend.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +16,7 @@ public interface WalletRepository extends JpaRepository<Wallet, Long>{
 	@Query(	value = "SELECT * " +
 				"FROM WALLET " +
 				"WHERE (?1 IS NULL OR WALLET_ID = TO_NUMBER(?1)) " +
-				"  AND ((?2 IS NULL OR ?2 = '') OR WALLET_NO LIKE ?2) " + 
+				"  AND ((?2 IS NULL OR ?2 = '') OR WALLET_NO = LIKE ?2) " + 
 				"  AND ((?3 IS NULL OR ?3 = '') OR MEMBER_ID >= TO_DATE(?4)) " +
 				"  AND ((?4 IS NULL OR ?4 = '') OR CREATE_TIME >= TO_DATE(?4)) " +
 				"  AND ((?5 IS NULL OR ?5 = '') OR CREATE_TIME <= TO_DATE(?5)) ",
@@ -29,4 +31,6 @@ public interface WalletRepository extends JpaRepository<Wallet, Long>{
 					"FROM WALLET WHERE SUBSTR(WALLET_NO,0,8) = TO_CHAR(SYSDATE,'YYYYMMDD')", 
 			nativeQuery = true)
 	String getWalletNoMaxId();
+	
+	Page<Wallet> findByMemberIdAndAmountGreaterThan(String memberId, Integer Amount, Pageable pageable);
 }

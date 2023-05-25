@@ -27,12 +27,12 @@
 			                    <div>
 			                    	<label>
 			                            <span class="text" >訂單編號：</span>
-			                            <input type="text" id="orderId" name="orderId">
+			                            <input type="text" id="orderNo" name="orderNo">
 			                        </label>
 			                    	&nbsp;&nbsp;&nbsp;
 			                    	<label>
 			                            <span class="text" >會員編號：</span>
-			                            <input type="number" id="memberId" name="memberId">     
+			                            <input type="text" id="memberId" name="memberId">     
 			                        </label>
 			                    </div>
 			                </div>
@@ -179,12 +179,13 @@
 				    controller:
 					{
 					    loadData: function(filter) {
-					    	if(isquery == 1) {
-					    		isquery = 0;
+					    	console.log(filter)
+					    	//if(isquery == 1) {
+					    		//isquery = 0;
 					    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    		return queryajax('queryMemberOrder', 'POST', requestData);
+					    		return queryajax('queryMemberOrder2', 'POST', requestData);
 					    		
-					    	}
+					    	//}
 					    }
 					},
 					fields: [
@@ -192,8 +193,8 @@
 						{ name: "orderNo", type: "text", width: 80 , title:"訂單編號" },
 						{ name: "memberId", type: "text", width: 80 ,title: "會員編號"},
 						{ name: "productId", type: "text", width: 80 , title:"產品編號" },
-						{ name: "productPrice", type: "text", width: 80, title:"購買單價" },
-						{ name: "buyQuantity", type: "text", width: 80 , title:"購買數量" },
+						{ name: "productPrice", type: "text", width: 60, title:"購買單價" },
+						{ name: "buyQuantity", type: "text", width: 60 , title:"購買數量" },
 						{
 					    	name: "Total",
 					      	width: 80,

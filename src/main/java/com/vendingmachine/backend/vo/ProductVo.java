@@ -51,4 +51,9 @@ public class ProductVo extends JSGridFilter{
 	private String createUser;
 	
 	private String changeImage;
+	
+	private String createTimeStart;
+	
+	private String createTimeEnd;
+	
 }

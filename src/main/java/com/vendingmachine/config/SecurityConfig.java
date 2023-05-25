@@ -1,5 +1,7 @@
 package com.vendingmachine.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,17 +37,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 配置身份驗證
  	@Override
  	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
- 		System.out.println("configure(AuthenticationManagerBuilder auth)");
  		auth.userDetailsService(userDetailsService).passwordEncoder(password());
  	}
  	
     // 配置 HTTP 安全性
  	@Override
  	protected void configure(HttpSecurity http) throws Exception {
- 		System.out.println("configure(HttpSecurity http)");
+ 		String[] authenticatedUrl = {"/function/**","/product/**"};
  		http.authorizeRequests()
  			.anyRequest().permitAll() // 其他請求皆開放
- 			//.anyRequest().authenticated() // 所有請求都要驗證
+ 			//.anyRequest().authenticated() // 所有請求都要驗證product
+ 			//.antMatchers("/function/**").authenticated()
+ 			//.antMatchers("/product/**").hasRole("product")
  			.and()
  			.formLogin()
  			.loginProcessingUrl("/loginAction")
