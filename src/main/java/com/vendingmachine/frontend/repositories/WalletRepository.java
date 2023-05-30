@@ -1,5 +1,6 @@
 package com.vendingmachine.frontend.repositories;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -15,14 +16,13 @@ public interface WalletRepository extends JpaRepository<Wallet, Long>{
 	
 	@Query(	value = "SELECT * " +
 				"FROM WALLET " +
-				"WHERE (?1 IS NULL OR WALLET_ID = TO_NUMBER(?1)) " +
-				"  AND ((?2 IS NULL OR ?2 = '') OR WALLET_NO = LIKE ?2) " + 
-				"  AND ((?3 IS NULL OR ?3 = '') OR MEMBER_ID >= TO_DATE(?4)) " +
-				"  AND ((?4 IS NULL OR ?4 = '') OR CREATE_TIME >= TO_DATE(?4)) " +
-				"  AND ((?5 IS NULL OR ?5 = '') OR CREATE_TIME <= TO_DATE(?5)) ",
+				"WHERE ((?1 IS NULL OR ?1 = '') OR WALLET_NO LIKE ?1) " + 
+				"  AND ((?2 IS NULL OR ?2 = '') OR MEMBER_ID LIKE ?2) " +
+				"  AND ((?3 IS NULL OR ?3 = '') OR CREATE_TIME >= ?3) " +
+				"  AND ((?4 IS NULL OR ?4 = '') OR CREATE_TIME <= ?4) ",
 			nativeQuery = true)
-	Page<Wallet> queryWallet(Long walletId, String walletNo, String memberId, 
-							 String createTimeStart, String createTimeEnd, Pageable pageable );
+	List<Wallet> queryWallet(String walletNo, String memberId, 
+							 Timestamp createTimeStart, Timestamp createTimeEnd);
 	
 	@Query(	value = "SELECT SUM(AMOUNT) FROM WALLET WHERE MEMBER_ID = ?1", nativeQuery = true)
 	Long getBalance(String memberId);

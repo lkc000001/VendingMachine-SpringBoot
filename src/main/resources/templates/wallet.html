@@ -27,12 +27,12 @@
 			                    <div>
 			                    	<label>
 			                            <span class="text" >扣款編號：</span>
-			                            <input type="text" id="orderId" name="orderId">
+			                            <input type="text" id="walletNo" name="walletNo">
 			                        </label>
 			                    	&nbsp;&nbsp;&nbsp;
 			                    	<label>
 			                            <span class="text" >會員編號：</span>
-			                            <input type="number" id="memberId" name="memberId">     
+			                            <input type="text" id="memberId" name="memberId">     
 			                        </label>
 			                    </div>
 			                </div>
@@ -97,11 +97,11 @@
 			});
 
 			function doquery() {
-				dojsGrid(1);
+				dojsGrid();
 			}
 			
 			//顯示查詢結果
-			function dojsGrid(isquery) {
+			function dojsGrid() {
 				let showcount = $('#showcount').val();
 				let message = "無資料";
 				
@@ -130,12 +130,9 @@
 				    controller:
 					{
 					    loadData: function(filter) {
-					    	if(isquery == 1) {
-					    		isquery = 0;
-					    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    		return queryajax('queryWallet', 'POST', requestData);
-					    		
-					    	}
+				    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+				    		const queryWalletUrl = /*[[@{/backend/wallet/queryWallet}]]*/'';
+				    		return queryajax(queryWalletUrl, 'POST', requestData);
 					    }
 					},
 					fields: [
@@ -162,12 +159,11 @@
 								}
 				                return $('<button class="update-btn-color">').text("購買明細")
 				                	.on("click", function() {
-				                		//$('#updateOrderId').val(item.orderId);
 				                		$('#updateModalTitle').val('扣款詳細資料');
-				                		let funcurl = /*[[@{/memberorder/queryMemberOrderByWalletId/}]]*/'';
+				                		const queryMemberOrderUrl = /*[[@{/backend/memberorder/queryMemberOrderByWalletId/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.walletId,
+				                		    url: queryMemberOrderUrl  + item.walletId,
 				                		    success: function (data) {
 				                		    	$('#showMemberOrder').html(data["data"]);
 				                		    }
@@ -181,11 +177,6 @@
 			}
 
 			//清除查詢資料
-			function doClear() {
-				$("#jsGrid").jsGrid("reset");
-				doClearData()
-				$("#jsGrid").children().remove();
-			}
 			function doClearData() {
 				document.getElementById("queryForm").reset();
         		$('#itemsCountDiv').css("display", "none");

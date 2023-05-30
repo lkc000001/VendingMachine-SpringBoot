@@ -20,14 +20,14 @@
 		        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="listHtml">
 		            <li th:each="functionGroup, status : ${functions}" class="nav-item menu-is-opening menu-open">
 		            	
-		            	<a href="#" class="nav-link main" th:if="${functionGroup.value[0].functionGroup} eq 0">
+		            	<a href="#" class="nav-link main" th:if="${functionGroup.value[0].functionGroup == '0' && #lists.size(functionGroup.value) > 1} ">
 		                    <i th:classappend="${functionGroup.value[0].functionUrl}"></i>
 		                    <p th:text="${functionGroup.value[0].functionShowName}" ><i class="right fas fa-angle-left"></i></p>
 		                </a> 
 		                
 		                <ul class="nav nav-treeview" th:if="${functionGroup.value[0].functionGroup} eq 0">
 			            	<li th:each="function, funcStatus : ${functionGroup.value}" class="nav-item">
-		                        <a th:if="${funcStatus.index} ne 0" th:href="@{/{url}/(url=${function.functionUrl.replace('/', '')})}" class="nav-link">
+		                        <a th:if="${funcStatus.index} ne 0" th:href="@{${function.functionUrl}}" class="nav-link">
 		                            <span class="navlisticon">
 		                            	<i th:if="${function.functionName} == ${selectFunction}" class="fa-solid fa-circle nav-icon"></i>
 		                            </span>

@@ -11,5 +11,5 @@ public interface UserFunctionService {
 	
 	List<UserFunctionProjection> queryUserPermission(Long userId);
 	
-	int update(UserFunction userFunction);
+	List<UserFunction> save(List<UserFunction> userFunctions);
 }

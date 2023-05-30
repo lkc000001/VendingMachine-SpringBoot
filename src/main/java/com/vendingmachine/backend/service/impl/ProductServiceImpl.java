@@ -57,7 +57,6 @@ public class ProductServiceImpl implements ProductService {
 		if (validateUtil.isNotBlank(endDate)) {
 			productVo.setCreateTimeEnd(endDate + " 23:59:59.997");
 		}
-		System.out.println(productVo);
 		Page<Product> products = productRepository.queryProduct(productVo.getProductId(),
 																  productVo.getProductName(),
 																  productVo.getClassify(),
@@ -156,6 +155,16 @@ public class ProductServiceImpl implements ProductService {
 		if(validateUtil.isNotBlank(productVo.getImage())) {
 			productVo.setImage(StringUtil.addPercentage(productVo.getImage(), 3));
 		}
+		
+		String sortField = productVo.getSortField() == null ? "id" : productVo.getSortField();
+		switch (sortField) {
+			case "productName":
+				sortField = "name";
+				break;
+			default:
+				sortField = productVo.getSortField();
+		}
+		productVo.setSortField(sortField);
 	}
 
 	

@@ -23,6 +23,7 @@ import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.repositories.FunctionRepository;
 import com.vendingmachine.backend.service.FunctionService;
+import com.vendingmachine.backend.vo.FunctionVo;
 import com.vendingmachine.util.ValidateUtil;
 
 @ControllerAdvice
@@ -38,20 +39,16 @@ public class GlobalController {
 	HttpSession session;
 	
 	@ModelAttribute(name = "functions")
-	public Map<String,List<Function>> getFunctions() {
+	public Map<String,List<FunctionVo>> getFunctions() {
 		@SuppressWarnings("unchecked")
-		Map<String,List<Function>> functionMap = (Map<String, List<Function>>) session.getAttribute("functionMap");
+		Map<String,List<FunctionVo>> functionMap = (Map<String, List<FunctionVo>>) session.getAttribute("functionMap");
 		if(functionMap == null) {
-			functionMap = functionService.navBarFunctionList();
+			AppUser appUser = (AppUser) session.getAttribute("appUser");
+			if(appUser != null) {
+				functionMap = functionService.navBarFunctionList(appUser.getUserId());
+			}
 		}
 		return functionMap;
 	}
-	
-	/*@ModelAttribute(name = "appUser")
-	public AppUser getAppUser(final Authentication authentication) {
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		
-		return userDetails = (UserDetails) authentication.getPrincipal();
-	}*/
 	
 }

@@ -30,10 +30,9 @@ class SalesReport extends Component {
     oldPage = 1; 
 
     onClickSearch = async () => {
-        //const params =  { "currentPageNo": 1, "pageDataSize": 5, "pagesIconSize": 5, "startDate": "2023-01-01", "endDate": "2023-05-01" };
         const startDate = this.startDate.current.value;
         const endDate = this.endDate.current.value;
-        //console.log("startDate:", this.startDate.current.value);
+
         const requestData = {
             pageIndex: this.state.pageIndex,
             pageSize: 2,

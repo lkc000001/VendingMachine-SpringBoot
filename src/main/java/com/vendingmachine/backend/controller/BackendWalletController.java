@@ -1,4 +1,4 @@
-package com.vendingmachine.frontend.controller;
+package com.vendingmachine.backend.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,13 +24,52 @@ import com.vendingmachine.frontend.vo.RespDataVo;
 import com.vendingmachine.frontend.vo.WalletVo;
 import com.vendingmachine.util.BeanCopyUtil;
 
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 @Controller
-@RequestMapping(value = "/wallet")
-public class WalletController {
+@RequestMapping(value = "/backend/wallet")
+public class BackendWalletController {
 
 	@Autowired
 	private WalletService walletService;
+	
+	private String saveRespMsg;
+	
+	@GetMapping("/")
+    public String index(Model model) {
+		model.addAttribute("selectFunction", "wallet");
+		if(saveRespMsg != null) {
+			model.addAttribute("saveRespMsg", saveRespMsg);
+			saveRespMsg = null;
+		}
+    	return "wallet";
+    }
+	
+	@PostMapping(path = "/queryWallet", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<JSGridReturnData<WalletVo>> queryWallet(@RequestBody WalletVo walletVo) {
+		List<Wallet> wallets = walletService.queryWallet(walletVo);
+		
+		long totalCount = wallets.size();
+		int totalPage = (int) ((totalCount / walletVo.getPageSize()) + 1);
+		
+		if(totalCount <= 0) {
+			throw new QueryNoDataException("查無資料!!!", 404);
+		}
+		
+		wallets = wallets.stream()
+				.skip(walletVo.getPageSize() * (walletVo.getPageIndex() - 1))
+				.limit(walletVo.getPageSize())
+				//.sorted(memberOrderSort(memberOrderVo.getSortField(), memberOrderVo.getSortOrder()))
+				.collect(Collectors.toList());
+		
+		List<WalletVo> walletVos = BeanCopyUtil.copyBeanList(wallets, WalletVo.class);
+		return ResponseEntity.ok(new JSGridReturnData<WalletVo>(walletVos, totalCount, totalPage));
+    }
+	
+	@GetMapping(path = "/getWallet/{id}")
+	@ResponseBody
+    public ResponseEntity<WalletVo> getWallet(@PathVariable("id") Long id) {
+		Wallet wallet = walletService.getWallet(id);
+    	return ResponseEntity.ok(BeanCopyUtil.copyBean(wallet, WalletVo.class));
+    }
 	
 	@PostMapping(path = "/addWallet", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RespDataVo> addWallet(@RequestBody WalletVo walletVo) {
@@ -41,33 +80,5 @@ public class WalletController {
 		Long balance = walletService.getBalance(walletVo.getMemberId());
 		return ResponseEntity.ok(new RespDataVo(200, balance, 0));
 	}
-	
-	@GetMapping(path = "/getBalance/{memberId}")
-	@ResponseBody
-    public ResponseEntity<RespDataVo> getBalance(@PathVariable("memberId") String memberId) {
-		Long balance = walletService.getBalance(memberId);
-		balance = balance == null ? 0 : balance;
-    	return ResponseEntity.ok(new RespDataVo(200, balance, 0));
-    }
-	
-	@PostMapping(path = "/findByMemberId", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RespDataVo> findByMemberId(@RequestBody WalletVo walletVo) {
-		String memberId = walletVo.getMemberId();
-		Page<Wallet> walletVoPage = walletService.findByMemberIdAndAmountGreaterThan(memberId, 0, walletVo.convertPageable());
-    	
-		if(walletVoPage.isEmpty()) {
-			throw new QueryNoDataException("查無資料!!!", 404);
-		}
-		
-		List<WalletVo> walletVos = BeanCopyUtil.copyBeanList(walletVoPage.getContent(), WalletVo.class);
-		
-		Long balance = walletService.getBalance(memberId);
-		walletVos.get(0).setBalance(balance);
-
-		long totalCount = walletVoPage.getTotalElements();
-		int totalPage = (int) ((totalCount / walletVo.getPageSize()) + 1);
-		
-		return ResponseEntity.ok(new RespDataVo(200, walletVos, totalPage));
-    }
 	
 }

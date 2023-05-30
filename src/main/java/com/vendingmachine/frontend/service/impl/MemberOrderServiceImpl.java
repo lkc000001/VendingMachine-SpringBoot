@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.repositories.ProductRepository;
 import com.vendingmachine.exception.InsufficientBalanceException;
+import com.vendingmachine.exception.TimeFormatException;
 import com.vendingmachine.frontend.entity.MemberOrder;
 import com.vendingmachine.frontend.entity.Wallet;
 import com.vendingmachine.frontend.repositories.MemberOrderRepository;
@@ -22,6 +23,7 @@ import com.vendingmachine.frontend.service.MemberOrderService;
 import com.vendingmachine.frontend.vo.MemberOrderVo;
 import com.vendingmachine.frontend.vo.WalletVo;
 import com.vendingmachine.util.BeanCopyUtil;
+import com.vendingmachine.util.DateTimtUtil;
 import com.vendingmachine.util.StringUtil;
 import com.vendingmachine.util.ValidateUtil;
 
@@ -42,6 +44,9 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	
 	@Autowired
 	private ValidateUtil validateUtil;
+	
+	@Autowired
+	private DateTimtUtil dateTimtUtil;
 	
 	@Value("${file.upload.path}")
 	String filePath;
@@ -122,15 +127,6 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 		return walletSaveResp;
 	}
 
-	private void checkData(MemberOrderVo memberOrderVo) {
-		if(validateUtil.isNotBlank(memberOrderVo.getOrderNo())) {
-			memberOrderVo.setOrderNo(StringUtil.addPercentage(memberOrderVo.getOrderNo(), 3));
-		} 
-		else {
-			memberOrderVo.setOrderNo(null);
-		}
-	}
-
 	@Override
 	public List<MemberOrder> queryMemberOrderByMemberId(String memberId) {
 		return memberOrderRepository.findByMemberId(memberId);
@@ -142,12 +138,34 @@ public class MemberOrderServiceImpl implements MemberOrderService {
 	}
 	
 	public List<MemberOrder> queryMemberOrderList(MemberOrderVo memberOrderVo) {
+		checkData(memberOrderVo);
 		List<MemberOrder> memberOrders = memberOrderRepository.queryMemberOrderList(memberOrderVo.getOrderNo(), 
 																				memberOrderVo.getMemberId(), 
 																				memberOrderVo.getProductId(), 
-																				memberOrderVo.getCreateTimeStart(), 
-																				memberOrderVo.getCreateTimeEnd());
+																				memberOrderVo.getStartTimestamp(), 
+																				memberOrderVo.getEndTimestamp());
 		
 		return memberOrders;
+	}
+	
+	private void checkData(MemberOrderVo memberOrderVo) {
+		if(validateUtil.isNotBlank(memberOrderVo.getOrderNo())) {
+			memberOrderVo.setOrderNo(StringUtil.addPercentage(memberOrderVo.getOrderNo(), 3));
+		}
+		if(validateUtil.isNotBlank(memberOrderVo.getMemberId())) {
+			memberOrderVo.setMemberId(StringUtil.addPercentage(memberOrderVo.getMemberId(), 3));
+		}
+		
+		String createTimeStart = memberOrderVo.getCreateTimeStart();
+		String createTimeEnd = memberOrderVo.getCreateTimeEnd();
+		
+		if(validateUtil.isNotBlank(createTimeStart) && validateUtil.isNotBlank(createTimeEnd)) {
+			if(Integer.parseInt(createTimeStart.replace("/", "")) > Integer.parseInt(createTimeEnd.replace("/", ""))) {
+				throw new TimeFormatException("日期設置錯誤，起始日期大於結束日期!!!", 400);
+			}
+		}
+		
+		memberOrderVo.setStartTimestamp(dateTimtUtil.formatStrToTimestamp(createTimeStart, 1));
+		memberOrderVo.setEndTimestamp(dateTimtUtil.formatStrToTimestamp(createTimeEnd, 2));
 	}
 }

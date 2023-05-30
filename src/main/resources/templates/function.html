@@ -248,8 +248,9 @@
 				    controller:
 					{
 					    loadData: function(filter) {
-					    	var requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    	return queryajax('queryFunction', 'POST', requestData);
+					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+					    	const queryFunctionUrl = /*[[@{/function/queryFunction}]]*/'';
+					    	return queryajax(queryFunctionUrl, 'POST', requestData);
 					    }
 					},
 					fields: [
@@ -269,10 +270,10 @@
 				                		$('#_method').val('PUT');
 				                		$('#updateModalTitle').val('修改功能資料');
 				                		$('#functionIddvi').css("display", "block");
-				                		let funcurl = /*[[@{/function/getFunction/}]]*/'';
+				                		const getFunctionUrl = /*[[@{/function/getFunction/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.functionId,
+				                		    url: getFunctionUrl  + item.functionId,
 				                		    success: function (data) {
 				                		    	$('#updateFunctionName').val(data["functionName"]);
 						                		$('#updateFunctionShowName').val(data["functionShowName"]);

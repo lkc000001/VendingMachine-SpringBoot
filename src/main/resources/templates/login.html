@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,9 +7,7 @@
     
     <link rel="stylesheet" th:href="@{/component/jQuery-UI/jquery-ui-1.12.1.min.css}" >
 	<link rel="stylesheet" th:href="@{/component/jQuery-UI/jquery-ui.theme-1.12.1.min.css}" >
-	<link rel="stylesheet" th:href="@{/component/Font-Awesome/css/all.css}" >
 	<link rel="stylesheet" th:href="@{/component/Bootstrap/bootstrap.min.css}" >
-    <link rel="stylesheet" th:href="@{/component/loaders/loaders.min.css}" >  
     <link rel="stylesheet" th:href="@{/component/CSS/normalize.css}">
     <link rel="stylesheet" th:href="@{/component/CSS/style.css}">
     <link rel="stylesheet" th:href="@{/component/CSS/login.css}">
@@ -51,7 +48,7 @@
 			<div class="container">
 			      <div class="loader-inner ball-spin-fade-loader" id="loaderdiv"></div>
 			</div>
-			<div class="error" th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></div>
+<!-- 			<div class="error" th:if="${session.LoginException}" th:text="${session.LoginException}"></div> -->
 
 			<div class="error" id="error" >
 				<br />
@@ -68,13 +65,16 @@
     
     <script th:src="@{/component/jQuery/jquery-3.6.0.min.js}"></script>
 	<script th:src="@{/component/jQuery-UI/jquery-ui-1.12.1.min.js}"></script>
-    <script th:src="@{/component/Bootstrap/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/component/JS/apiGLUtil.js}"></script>
     
     <script th:inline="javascript">
     	$(document).ready(function() {
     		//產生驗證碼
     		doauthCode();
+    		let loginException = '[[${session.LoginException}]]';
+    		if(loginException != 'null') {
+    			$("#error").html(loginException.replaceAll("\"", "") + " <br /> &nbsp");
+    			"[[${#session.removeAttribute('LoginException')}]]";
+    		}
     	});
   		
 		function doauthCode() {

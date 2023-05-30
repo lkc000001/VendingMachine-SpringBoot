@@ -1,21 +1,23 @@
 package com.vendingmachine.backend.vo;
 
 public interface UserFunctionProjection {
-	Long getFunctionid();
+	Long getFunctionId();
 	
-	String getFunctionname();
+	String getFunctionName();
 	
-	String getFunctionshowname();
+	String getFunctionShowName();
 	
-	String getFunctionurl();
+	String getFunctionUrl();
 	
-	String getFunctionsort();
+	String getFunctionSort();
+	
+	String getFunctionGroup();
 	
 	String getEnabled();
 	
 	String getType();
 	
-	String getPermissionenabled();
+	String getPermissionEnabled();
 	
-	Long getUserfunctionid();
+	Long getUserFunctionId();
 }

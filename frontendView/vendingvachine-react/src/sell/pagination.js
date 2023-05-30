@@ -24,8 +24,6 @@ class pagination extends Component {
         }
         this.oldPage = page;
         this.props.queryProduct(page);
-        console.log(page);
-
     }
 
     render() {

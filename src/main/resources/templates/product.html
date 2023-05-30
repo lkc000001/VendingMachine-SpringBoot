@@ -291,7 +291,8 @@
 					{
 					    loadData: function(filter) {
 					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    	return queryajax('queryProduct', 'POST', requestData);
+					    	const queryProductUrl = /*[[@{/product/queryProduct}]]*/'';
+					    	return queryajax(queryProductUrl, 'POST', requestData);
 					    }
 					},
 					fields: [
@@ -300,9 +301,9 @@
 						{ name: "price", type: "text", width: 50 , title:"單價" },
 						{ name: "cost", type: "text", width: 50, title:"成本" },
 						{ name: "stock", type: "text", width: 40, title:"庫存"},
-						{ name: "unit", type: "text", width: 40, title:"單位"},
-						{ name: "classify", type: "text", width: 80, title:"分頖" },
-						{ name: "image", type: "text", width: 80, title:"圖片名稱" },
+						{ name: "unit", type: "text", width: 40, title:"單位", sorting: false},
+						{ name: "classify", type: "text", width: 80, title:"分頖", sorting: false },
+						{ name: "image", type: "text", width: 80, title:"圖片名稱", sorting: false },
 						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
 						{ 
 							itemTemplate: function(_, item) {
@@ -310,10 +311,10 @@
 				                	.on("click", function() {
 				                		$('#updateProductId').val(item.productId);
 				                		setShowItem('UPDATE');
-				                		const funcurl = /*[[@{/product/getProduct/}]]*/'';
+				                		const getProductUrl = /*[[@{/product/getProduct/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.productId,
+				                		    url: getProductUrl + item.productId,
 				                		    success: function (data) {
 				                		    	$('#updateProductName').val(data["productName"]);
 						                		$('#updatePrice').val(data["price"]);

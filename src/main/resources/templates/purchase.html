@@ -142,7 +142,7 @@
 		<script th:inline="javascript">
 		
 			$(document).ready(function() {
-				doClear()
+				
 				let saveRespMsg = /*[[${saveRespMsg}]]*/'';
 				if(saveRespMsg != null){
 					showMsg("", saveRespMsg);
@@ -155,6 +155,7 @@
 					mask:true,
 				});
 				
+				doClear()
 			});
 			
 			$('#updateProductId').on('change', function(e){  

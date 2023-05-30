@@ -19,11 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.entity.Function;
+import com.vendingmachine.backend.entity.UserFunction;
 import com.vendingmachine.backend.repositories.FunctionRepository;
+import com.vendingmachine.backend.repositories.UserFunctionRepository;
 import com.vendingmachine.backend.service.FunctionService;
 import com.vendingmachine.backend.vo.FunctionVo;
 import com.vendingmachine.backend.vo.SelectDataVo;
+import com.vendingmachine.backend.vo.UserFunctionProjection;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 
@@ -33,6 +37,9 @@ public class FunctionServiceImpl implements FunctionService {
 	@Autowired
 	private FunctionRepository functionRepository;
 
+	@Autowired
+	UserFunctionRepository userFunctionRepository;
+	
 	@Autowired
 	private StringUtil StringUtil;
 	
@@ -112,20 +119,50 @@ public class FunctionServiceImpl implements FunctionService {
 		if(functionSaveResp == null) {
 			return func +"功能資料失敗";
 		}
+		
 		//更新navBar
-		navBarFunctionList();
+		AppUser appUser = (AppUser) session.getAttribute("appUser");
+		if(appUser != null) {
+			navBarFunctionList(appUser.getUserId());
+		}
+		
     	return func +"功能資料成功";
 	}
 	
 	@Override
-	public Map<String,List<Function>> navBarFunctionList() {
+	public Map<String,List<FunctionVo>> navBarFunctionList(Long userId) {
+		
+
+		if(userId == null) {
+			return null;
+		}
 		//取得啟用中的Function
 		List<Function> functionGroups = findByEnabled();
+		
+		List<FunctionVo> functionVos = BeanCopyUtil.copyBeanList(functionGroups, FunctionVo.class);
+		
+		//取得權限
+		List<UserFunction> userPermission = userFunctionRepository.queryUserFunctionByUserIdIsEnable(userId);
+		List<Long> permissionFunctionIdList = userPermission.stream()
+		        .map(UserFunction::getFunctionId)
+		        .collect(Collectors.toList());
+		
+		functionVos.forEach(u -> {
+			Boolean isTrue = permissionFunctionIdList.stream().anyMatch(p-> p == u.getFunctionId());
+			if(isTrue) {
+				u.setPermissionEnabled("1");
+			} else {
+				u.setPermissionEnabled("0");
+			}
+		});
+		
 		//分群處理不同類別
-		Map<String,List<Function>> functionMap = functionGroups.stream()
-				.sorted(comparing(Function::getFunctionGroup)
-							.thenComparing(Function::getFunctionSort))
-				.collect(groupingBy(Function::getType, LinkedHashMap::new, Collectors.toList()));
+		Map<String,List<FunctionVo>> functionMap = functionVos.stream()
+				.filter(f -> "0".equals(f.getFunctionGroup()) || "1".equals(f.getPermissionEnabled()))
+				.sorted(comparing(FunctionVo::getFunctionGroup)
+							.thenComparing(FunctionVo::getFunctionSort))
+				.collect(groupingBy(FunctionVo::getType, LinkedHashMap::new, Collectors.toList()));
+
 		session.setAttribute("functionMap", functionMap);
 		return functionMap;
 	}
@@ -133,6 +170,20 @@ public class FunctionServiceImpl implements FunctionService {
 	@Override
 	public List<Function> findAll() {
 		return functionRepository.findAll();
+	}
+	
+	@Override
+	public String getFirstFunctionUrl(Long userId) {
+		Map<String,List<FunctionVo>> functionMap = navBarFunctionList(userId);
+		Optional<FunctionVo> functionVo = functionMap.values().stream()
+				   .flatMap(List::stream)
+				   .filter(f -> "1".equals(f.getFunctionGroup()))
+				   .findFirst();
+
+		if(functionVo.isPresent()) {
+			return functionVo.get().getFunctionUrl();
+		}
+		return null;
 	}
 	
 	private void checkData(FunctionVo functionVo) {
@@ -146,4 +197,6 @@ public class FunctionServiceImpl implements FunctionService {
 			functionVo.setFunctionUrl(StringUtil.addPercentage(functionVo.getFunctionUrl(), 3));
 		}
 	}
+
+	
 }

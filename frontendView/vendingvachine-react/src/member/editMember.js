@@ -28,7 +28,6 @@ const EditMember = () => {
         //取得form表單資料
         const data = new FormData(event.target);
         const formValues = Object.fromEntries(data.entries());
-        console.log( formValues )
         //儲存會員資料
         const memberResp = await axios.put(updataMemberUrl, formValues, { withCredentials: true })
                                                 .then(rs => rs.data)

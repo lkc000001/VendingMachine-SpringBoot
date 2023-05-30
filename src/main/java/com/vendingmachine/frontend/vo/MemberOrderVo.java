@@ -1,5 +1,6 @@
 package com.vendingmachine.frontend.vo;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,10 @@ public class MemberOrderVo extends JSGridFilter {
 	private String createTimeStart;
 	
 	private String createTimeEnd;
+	
+	private Timestamp startTimestamp;
+	
+	private Timestamp endTimestamp;
 	
 	private Long walletId;
 	

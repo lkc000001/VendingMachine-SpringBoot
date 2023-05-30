@@ -33,4 +33,8 @@ public class FunctionVo extends JSGridFilter {
 	private Date createTime;
 	
 	private String createUser;
+	
+	private String permissionEnabled;
+	
+	private Long userFunctionId;
 }

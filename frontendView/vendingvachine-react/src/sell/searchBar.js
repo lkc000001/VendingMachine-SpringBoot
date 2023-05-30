@@ -28,7 +28,7 @@ const SearchBar = (props) => {
         const { data } = await axios.get(getProductClassifyUrl, {timeout: 3000})
         .then(rs => rs)
         .catch(error => { console.log(error); });
-        console.log(data);
+        
         setClassifyList(data.data);
     }
 
@@ -47,7 +47,7 @@ const SearchBar = (props) => {
         setSearchString('');
         searchProduct();
     }
-    console.log('classifyList:',classifyList);
+
     return (
         <Container fluid="sm" className='mb-3'>
             <Row>

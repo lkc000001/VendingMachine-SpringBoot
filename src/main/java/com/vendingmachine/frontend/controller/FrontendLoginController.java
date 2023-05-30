@@ -30,7 +30,7 @@ public class FrontendLoginController {
 	@Autowired
 	private MemberService memberService;
 	
-	@PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/memberLogin", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RespDataVo> index(HttpSession session, @RequestBody MemberVo memberVo) {
 		Member member = memberService.getMember(memberVo.getMemberId());
 

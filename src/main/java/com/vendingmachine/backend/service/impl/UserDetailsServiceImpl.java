@@ -1,6 +1,5 @@
 package com.vendingmachine.backend.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,13 +16,18 @@ import org.springframework.stereotype.Service;
 
 import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.repositories.AppUserRepository;
+import com.vendingmachine.backend.repositories.UserFunctionRepository;
+import com.vendingmachine.backend.vo.UserFunctionProjection;
 import com.vendingmachine.util.ValidateUtil;
 
-@Service("userDetailsService")
+//@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired
 	AppUserRepository userRepository;
+	
+	@Autowired
+	UserFunctionRepository userFunctionRepository;
 	
 	@Autowired
 	ValidateUtil validateUtil;
@@ -42,14 +46,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     	} else {
     		pwd = user.getPwd();
     		authority = user.getGroupName();
-    		String Roles = "ADMIN,USER";
-    		auths = Arrays.stream(Roles.split(","))
-    				.map(SimpleGrantedAuthority::new)
-    				//.map(role -> new SimpleGrantedAuthority(role))
-    				.collect(Collectors.toList());
     		
-    		user.setPwd("");
-    		session.setAttribute("appUser", user);
+    		List<UserFunctionProjection> userPermission = userFunctionRepository.queryUserPermission(user.getUserId());
+    		List<String> userRoles = userPermission.stream()
+    												.filter(u -> "1".equals(u.getPermissionEnabled()))
+    												.map(u -> "ROLE_" + u.getFunctionName())
+    												.collect(Collectors.toList()); 
+    		System.out.println(userRoles);
+    		auths = userRoles.stream()
+    				.map(SimpleGrantedAuthority::new)
+    				.collect(Collectors.toList());
     	}
     	
     	UserDetails userDetails = new User(username, pwd, 

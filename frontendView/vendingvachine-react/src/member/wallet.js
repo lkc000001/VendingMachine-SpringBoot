@@ -5,6 +5,9 @@ import MemberNav from './memberNav'
 import '../CSS/wallet.css';
 import { Button } from 'react-bootstrap';
 
+const getWalletUrl  = 'http://localhost:8086/VendingMachine/wallet/findByMemberId/';
+const addWalletUrl  = 'http://localhost:8086/VendingMachine/wallet/addWallet/';
+
 const Wallet = () => {
 
   const [ { memberId, memberName } , setMemberDetails ] = useState({ 
@@ -37,13 +40,12 @@ const Wallet = () => {
   }
 
   const getWallet = async () => {
-    const apiUrl  = 'http://localhost:8086/VendingMachine/wallet/findByMemberId/';
     const requestData = {
       pageIndex: 1,
       pageSize: 10,
       memberId: memberId
     };
-    const { data } = await axios.post(apiUrl, requestData, {timeout: 3000})
+    const { data } = await axios.post(getWalletUrl, requestData, {timeout: 3000})
     .then(rs => rs)
     .catch(error => { console.log(error); });
 
@@ -52,12 +54,11 @@ const Wallet = () => {
   }
 
   const saveWallet = async () => {
-    const apiUrl  = 'http://localhost:8086/VendingMachine/wallet/addWallet/';
     const requestData = {
       memberId: memberId,
       amount: amount
     };
-    const { data } = await axios.post(apiUrl, requestData, {timeout: 3000})
+    const { data } = await axios.post(addWalletUrl, requestData, {timeout: 3000})
     .then(rs => rs)
     .catch(error => { console.log(error); });
 

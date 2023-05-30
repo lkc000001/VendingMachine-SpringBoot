@@ -146,11 +146,11 @@
 			});
 
 			function doquery() {
-				dojsGrid(1);
+				dojsGrid();
 			}
 			
 			//顯示查詢結果
-			function dojsGrid(isquery) {
+			function dojsGrid() {
 				let showcount = $('#showcount').val();
 				let message = "無資料";
 				
@@ -179,13 +179,9 @@
 				    controller:
 					{
 					    loadData: function(filter) {
-					    	console.log(filter)
-					    	//if(isquery == 1) {
-					    		//isquery = 0;
-					    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    		return queryajax('queryMemberOrder2', 'POST', requestData);
-					    		
-					    	//}
+				    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
+				    		const queryMemberOrderUrl = /*[[@{/backend/memberorder/queryMemberOrderList}]]*/'';
+				    		return queryajax(queryMemberOrderUrl, 'POST', requestData);
 					    }
 					},
 					fields: [
@@ -209,10 +205,10 @@
 				                	.on("click", function() {
 				                		$('#updateOrderId').val(item.orderId);
 				                		$('#updateModalTitle').val('會員資料詳細資料');
-				                		let funcurl = /*[[@{/memberorder/getMemberOrder/}]]*/'';
+				                		let getMemberOrderUrl = /*[[@{/backend/memberorder/getMemberOrder/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl  + item.orderId,
+				                		    url: getMemberOrderUrl  + item.orderId,
 				                		    success: function (data) {
 				                		    	$('#updateOrderNo').val(data["orderNo"]);
 				                		    	$('#updateMemberId').val(data["memberId"]);

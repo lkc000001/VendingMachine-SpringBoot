@@ -10,7 +10,7 @@ import com.vendingmachine.frontend.vo.WalletVo;
 
 public interface WalletService {
 	
-	Page<Wallet> queryWallet(WalletVo walletVo);
+	List<Wallet> queryWallet(WalletVo walletVo);
 	
 	Wallet getWallet(Long id);
 	

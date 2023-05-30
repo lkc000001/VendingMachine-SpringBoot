@@ -23,7 +23,7 @@ const ShoppingCart = ({ shoppingCart, setCheckout, changeCountVer, changeShoppin
         } else {
             setCheckout(true);
         }
-    }, [ shoppingCart, balance ]);
+    }, [ shoppingCart, balance, changeCount ]);
 
     const updateQuantity = (index, newQuantity) => {
         const item = shoppingCartList[index];
@@ -50,7 +50,6 @@ const ShoppingCart = ({ shoppingCart, setCheckout, changeCountVer, changeShoppin
         .then(rs => rs)
         .catch(error => { console.log(error); });
 
-        console.log('state:',data.state)
         if(data.state === 4202) {
             changeShoppingCart([])
             setShoppingCartList([])

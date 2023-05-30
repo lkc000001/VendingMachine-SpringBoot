@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../CSS/sell.css';
 import axios from "axios";
 
+const checkLoginUrl  = "http://localhost:8086/VendingMachine/frontend/checkLogin";
+const addShoppingCartUrl  = "http://localhost:8086/VendingMachine/shopping/addShoppingCart";
+const productImagesUrl  = "http://localhost:8086/VendingMachine/frontend/product/images/";
 
 class card extends Component {
 
@@ -11,7 +14,6 @@ class card extends Component {
     };
 
     setInputBuyQuantity = (event) => {
-        console.log(event.target.value)
         this.setState({
             inputBuyQuantity: event.target.value
         });
@@ -19,10 +21,11 @@ class card extends Component {
     };
 
     addShoppingCart = async () => {
-        const checkLoginResp = await axios.get("http://localhost:8086/VendingMachine/frontend/checkLogin", { withCredentials: true })
+        //檢查是否已登入
+        const checkLoginResp = await axios.get(checkLoginUrl, { withCredentials: true })
         .then(rs => rs.data)
         .catch(error => { console.log(error); });
-        console.log('checkLoginResp:', checkLoginResp)
+        console.log(checkLoginResp)
         if(checkLoginResp.state === 200) {
             const { productId, price, stock, cost } = this.props.product;
             const inputBuyQuantity = this.state.inputBuyQuantity;
@@ -46,7 +49,7 @@ class card extends Component {
                 total: inputBuyQuantity * productPrice
             };
 
-            const productShoppingCarts = await axios.post("http://localhost:8086/VendingMachine/shopping/addShoppingCart", shoppingCart, { withCredentials: true })
+            const productShoppingCarts = await axios.post(addShoppingCartUrl, shoppingCart, { withCredentials: true })
                                                     .then(rs => rs.data)
                                                     .catch(error => { this.props.showMessage('', '加入購物車失敗'); });
             
@@ -74,7 +77,7 @@ class card extends Component {
 
                 <span className="cardTitle">{ productName }</span>
                 {
-                    image != null && <img src={'http://localhost:8086/VendingMachine/product/images/' + image } className="cardImage" alt="..."/>
+                    image != null && <img src={ productImagesUrl + image } className="cardImage" alt="..."/>
                 }
                 <div className="card-body pb-1">
                     <span className="cardText displayInline mr-5" >價格: { price }</span>

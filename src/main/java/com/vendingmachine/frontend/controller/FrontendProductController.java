@@ -1,5 +1,9 @@
 package com.vendingmachine.frontend.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,5 +52,12 @@ public class FrontendProductController {
     public ResponseEntity<RespDataVo> getProductClassify() {
 		List<String> classify = productService.getProductClassify();
     	return ResponseEntity.ok(new RespDataVo(200, classify, 0));
+    }
+	
+	@GetMapping("/images/{imageName}")
+	@ResponseBody
+    public byte[] getImage(@PathVariable String imageName) throws IOException {
+        Path imagePath = Paths.get("C:/data/image/" + imageName);
+        return Files.readAllBytes(imagePath);
     }
 }

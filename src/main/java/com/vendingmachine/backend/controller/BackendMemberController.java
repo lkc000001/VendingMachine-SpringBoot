@@ -1,4 +1,4 @@
-package com.vendingmachine.frontend.controller;
+package com.vendingmachine.backend.controller;
 
 import java.util.List;
 
@@ -26,14 +26,25 @@ import com.vendingmachine.frontend.vo.MemberVo;
 import com.vendingmachine.frontend.vo.RespDataVo;
 import com.vendingmachine.util.BeanCopyUtil;
 
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 @Controller
-@RequestMapping(value = "/member")
-public class MemberController {
+@RequestMapping(value = "/backend/member")
+public class BackendMemberController {
 
 	@Autowired
 	private MemberService memberService;
-
+	
+	private String saveRespMsg;
+	
+	@GetMapping("/")
+    public String index(Model model) {
+		model.addAttribute("selectFunction", "member");
+		if(saveRespMsg != null) {
+			model.addAttribute("saveRespMsg", saveRespMsg);
+			saveRespMsg = null;
+		}
+    	return "member";
+    }
+	
 	@PostMapping(path = "/queryMember", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSGridReturnData<MemberVo>> queryMember(@RequestBody MemberVo memberVo) {
 		Page<Member> memberPage = memberService.queryMember(memberVo);
@@ -55,23 +66,9 @@ public class MemberController {
     	return ResponseEntity.ok(BeanCopyUtil.copyBean(member, MemberVo.class));
     }
 	
-	@PostMapping(path = "/addMember", consumes = "application/json", produces = "application/json")
-	@ResponseBody
-    public ResponseEntity<RespDataVo> addMember(@RequestBody MemberVo memberVo) {
-		boolean checkMembetId = memberService.checkMembetId(memberVo.getMemberId());
-		if(checkMembetId) {
-			return ResponseEntity.ok(new RespDataVo(4001, "帳號已存在", 0));
-		}
-		memberVo.setEnabled("1");
-		String saveRespMsg = memberService.save(memberVo, "新增");
-		return ResponseEntity.ok(new RespDataVo(200, saveRespMsg, 0));
-    }
-	
-	@PutMapping(path = "/updataMember" , consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RespDataVo> updataMember(HttpSession session, @RequestBody MemberVo memberVo) {
-		memberVo.setEnabled("1");
-		String saveRespMsg = memberService.save(memberVo, "修改");
-		session.setAttribute("frontendUser", memberVo);
-		return ResponseEntity.ok(new RespDataVo(200, saveRespMsg, 0));
+	@PutMapping(path = "/save")
+    public String backendUpdateMember(MemberVo memberVo) {
+		saveRespMsg = memberService.save(memberVo, "修改");
+		return "redirect:./";
     }
 }

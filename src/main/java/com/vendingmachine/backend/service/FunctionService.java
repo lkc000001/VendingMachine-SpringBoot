@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.vo.FunctionVo;
 import com.vendingmachine.backend.vo.SelectDataVo;
+import com.vendingmachine.backend.vo.UserFunctionProjection;
 
 public interface FunctionService {
 	
@@ -21,7 +22,9 @@ public interface FunctionService {
 	
 	String save(FunctionVo functionVo, String func);
 	
-	Map<String,List<Function>> navBarFunctionList();
+	Map<String,List<FunctionVo>> navBarFunctionList(Long userId);
 	
 	List<Function> findAll();
+	
+	String getFirstFunctionUrl(Long userId);
 }

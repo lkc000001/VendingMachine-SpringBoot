@@ -2,7 +2,7 @@
 <html lang="zh-Hant-TW" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta name="viewport" content="width=device-width" />
-		<title>商品資料管理</title>
+		<title>ERROR</title>
 		<!-- 載入CSS -->
 		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
 	</head>
@@ -19,7 +19,9 @@
 			    	<div class="main-title">
 						<span class="title-text">ERROR</span>
 		             </div>
-					<div class="errorMsg" id="errorMsg"> </div>
+					<div class="errorMsg" id="errorMsg"> 
+						您尚未有此功能之權限。<BR>如需開通權限，請洽管理人員。
+					</div>
 					
 					<div class="pagebtn">
 						<div id = "returnbtn" class="btn newbtn-gray" onclick="doreturn();">返回</div>
@@ -35,12 +37,7 @@
 		<script language="JavaScript" type="text/JavaScript">
 			//回上一頁
 			function doreturn() {
-				if(loginMessage != 'null') {
-					window.location.href =  eportalHomepage;
-				} else {
-					<% session.setAttribute("querysession", "return"); %>;
-					history.back();
-				}
+				history.back();
 			}
 			
 		</script>

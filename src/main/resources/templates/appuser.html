@@ -266,10 +266,10 @@
 				                	.on("click", function() {
 				                		$('#updateUserId').val(item.userId);
 				                		setShowItem('UPDATE');
-				                		const funcurl = /*[[@{/appUser/getAppUser/}]]*/'';
+				                		const getAppUserUrl = /*[[@{/appUser/getAppUser/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
-				                		    url: funcurl + item.userId,
+				                		    url: getAppUserUrl + item.userId,
 				                		    success: function (data) {
 				                		    	$('#updateUserId').val(data["userId"]);
 						                		$('#updateAccount').val(data["account"]);
@@ -287,8 +287,8 @@
 							itemTemplate: function(_, item) {
 				                return $('<button class="perm-btn-color">').text("權限")
 				                	.on("click", function() {
-				                		const contextPath = /*[[@{/permissions/}]]*/ '';
-				                		window.location.href = contextPath + item.userId;
+				                		const permissionsPath = /*[[@{/permissions/user/}]]*/ '';
+				                		window.location.href = permissionsPath + item.userId;
 				                	});
 				          	}, sorting: false, width: 60
 						}

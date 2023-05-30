@@ -104,14 +104,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 		String startDate = purchaseVo.getCreateTimeStart();
 		String endDate = purchaseVo.getCreateTimeEnd();
         
-		if("____/__/__".equals(startDate)) {
-			startDate = NONE;
-			purchaseVo.setCreateTimeStart(NONE);
-		}
-		if("____/__/__".equals(endDate)) {
-			endDate = NONE;
-			purchaseVo.setCreateTimeEnd(NONE);
-		}
 		if(validateUtil.isNotBlank(startDate) && validateUtil.isNotBlank(endDate)) {
 			if(Integer.parseInt(startDate.replace("/", "")) > Integer.parseInt(endDate.replace("/", ""))) {
 				throw new TimeFormatException("日期設置錯誤，起始日期大於結束日期!!!", 400);

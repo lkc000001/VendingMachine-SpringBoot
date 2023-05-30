@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
+
 const LoginPage = (props) => {
 
     //取得當前頁面URL
@@ -19,10 +20,9 @@ const LoginPage = (props) => {
         const formValues = Object.fromEntries(data.entries());
         
         //登入驗証
-        const LoginResp = await axios.post("http://localhost:8086/VendingMachine/frontend/login", formValues, { withCredentials: true })
+        const LoginResp = await axios.post("http://localhost:8086/VendingMachine/frontend/memberLogin", formValues, { withCredentials: true })
                                                 .then(rs => rs.data)
                                                 .catch(error => { console.log(error); });
- 
         if(LoginResp.state !== 200) {
             showMessage(LoginResp.data);
             return null;

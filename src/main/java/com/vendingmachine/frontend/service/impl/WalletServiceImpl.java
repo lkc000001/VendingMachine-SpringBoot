@@ -1,11 +1,6 @@
 package com.vendingmachine.frontend.service.impl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,28 +13,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.vendingmachine.backend.entity.Product;
-import com.vendingmachine.backend.repositories.ProductRepository;
-import com.vendingmachine.backend.service.ProductService;
-import com.vendingmachine.backend.vo.JSGridReturnData;
-import com.vendingmachine.backend.vo.ProductVo;
-import com.vendingmachine.exception.QueryNoDataException;
-import com.vendingmachine.frontend.entity.Member;
-import com.vendingmachine.frontend.entity.MemberOrder;
+import com.vendingmachine.exception.TimeFormatException;
 import com.vendingmachine.frontend.entity.Wallet;
-import com.vendingmachine.frontend.repositories.MemberOrderRepository;
-import com.vendingmachine.frontend.repositories.MemberRepository;
 import com.vendingmachine.frontend.repositories.WalletRepository;
-import com.vendingmachine.frontend.service.MemberOrderService;
-import com.vendingmachine.frontend.service.MemberService;
 import com.vendingmachine.frontend.service.WalletService;
-import com.vendingmachine.frontend.vo.MemberOrderVo;
-import com.vendingmachine.frontend.vo.MemberVo;
 import com.vendingmachine.frontend.vo.WalletVo;
 import com.vendingmachine.util.BeanCopyUtil;
-import com.vendingmachine.util.CheckVoDate;
+import com.vendingmachine.util.DateTimtUtil;
 import com.vendingmachine.util.StringUtil;
 import com.vendingmachine.util.ValidateUtil;
 
@@ -55,18 +36,19 @@ public class WalletServiceImpl implements WalletService {
 	@Autowired
 	private ValidateUtil validateUtil;
 	
+	@Autowired
+	private DateTimtUtil dateTimtUtil;
+	
 	@Value("${file.upload.path}")
 	String filePath;
 	
 	@Override
-	public Page<Wallet> queryWallet(WalletVo walletVo) {
+	public List<Wallet> queryWallet(WalletVo walletVo) {
 		checkData(walletVo);
-		Page<Wallet> wallets = walletRepository.queryWallet(walletVo.getWalletId(), 
-															walletVo.getWalletNo(), 
+		List<Wallet> wallets = walletRepository.queryWallet(walletVo.getWalletNo(), 
 															walletVo.getMemberId(), 
-															walletVo.getCreateTimeStart(), 
-															walletVo.getCreateTimeEnd(), 
-															walletVo.convertPageable());
+															walletVo.getStartTimestamp(), 
+															walletVo.getEndTimestamp());
 		return wallets;
 	}
 
@@ -78,16 +60,6 @@ public class WalletServiceImpl implements WalletService {
 		}
 		return null;
 	}	
-	
-	private void checkData(WalletVo walletVo) {
-
-		if(validateUtil.isNotBlank(walletVo.getMemberId())) {
-			walletVo.setMemberId(StringUtil.addPercentage(walletVo.getMemberId(), 3));
-		}
-		CheckVoDate checkVoDate = new CheckVoDate(walletVo.getCreateTimeStart(), walletVo.getCreateTimeEnd());
-		walletVo.setCreateTimeStart(checkVoDate.getCreateTimeStart());
-		walletVo.setCreateTimeEnd(checkVoDate.getCreateTimeEnd());
-	}
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -124,4 +96,27 @@ public class WalletServiceImpl implements WalletService {
 	public Page<Wallet> findByMemberIdAndAmountGreaterThan(String memberId, Integer Amount, Pageable pageable) {
 		return walletRepository.findByMemberIdAndAmountGreaterThan(memberId, Amount, pageable);
 	}	
+	
+	private void checkData(WalletVo walletVo) {
+
+		if(validateUtil.isNotBlank(walletVo.getWalletNo())) {
+			walletVo.setWalletNo(StringUtil.addPercentage(walletVo.getWalletNo(), 3));
+		}
+		if(validateUtil.isNotBlank(walletVo.getMemberId())) {
+			walletVo.setMemberId(StringUtil.addPercentage(walletVo.getMemberId(), 3));
+		}
+		
+		String createTimeStart = walletVo.getCreateTimeStart();
+		String createTimeEnd = walletVo.getCreateTimeEnd();
+		
+		if(validateUtil.isNotBlank(createTimeStart) && validateUtil.isNotBlank(createTimeEnd)) {
+			if(Integer.parseInt(createTimeStart.replace("/", "")) > Integer.parseInt(createTimeEnd.replace("/", ""))) {
+				throw new TimeFormatException("日期設置錯誤，起始日期大於結束日期!!!", 400);
+			}
+		}
+		
+		walletVo.setStartTimestamp(dateTimtUtil.formatStrToTimestamp(createTimeStart, 1));
+		walletVo.setEndTimestamp(dateTimtUtil.formatStrToTimestamp(createTimeEnd, 2));
+	}
+	
 }
