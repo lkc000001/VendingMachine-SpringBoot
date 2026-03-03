@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import com.vendingmachine.backend.entity.Function;
 import com.vendingmachine.backend.vo.FunctionVo;
 import com.vendingmachine.backend.vo.SelectDataVo;
-import com.vendingmachine.backend.vo.UserFunctionProjection;
 
 public interface FunctionService {
 	

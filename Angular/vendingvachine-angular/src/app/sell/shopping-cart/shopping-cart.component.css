@@ -1,0 +1,18 @@
+.search-block-line-title {
+  text-align: center;
+  display:block !important;
+  font-size: 24px;
+}
+
+.showright{
+	float: right;
+}
+
+/** 網格 **/
+.row {
+  border: 1px solid #000;
+}
+
+.col {
+  border: 1px solid #000;
+}

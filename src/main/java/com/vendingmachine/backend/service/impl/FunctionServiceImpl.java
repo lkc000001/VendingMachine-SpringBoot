@@ -27,7 +27,6 @@ import com.vendingmachine.backend.repositories.UserFunctionRepository;
 import com.vendingmachine.backend.service.FunctionService;
 import com.vendingmachine.backend.vo.FunctionVo;
 import com.vendingmachine.backend.vo.SelectDataVo;
-import com.vendingmachine.backend.vo.UserFunctionProjection;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 
@@ -132,7 +131,6 @@ public class FunctionServiceImpl implements FunctionService {
 	@Override
 	public Map<String,List<FunctionVo>> navBarFunctionList(Long userId) {
 		
-
 		if(userId == null) {
 			return null;
 		}

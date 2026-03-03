@@ -41,11 +41,12 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     	String functionUrl = "/login/";
     	String username = authentication.getName();
     	AppUser appUser = userRepository.findByAccount(username);
+    	
 		if(appUser != null) {
 			functionUrl = functionService.getFirstFunctionUrl(appUser.getUserId());
-			System.out.println("functionUrl:" + functionUrl);
+			appUser.setPwd("");
 			request.getSession().setAttribute("appUser", appUser);
-			if(functionUrl==null) {
+			if(functionUrl == null) {
 				functionUrl = "/error/";
 			}
 		} 

@@ -197,7 +197,7 @@
 			
 			
 			const isFileExists = async (fileName) => {
-				const url = /*[[@{/product/isFileExists/}]]*/'';
+				const url = /*[[@{/Product/isFileExists/}]]*/'';
 				const respData = await fetch(url + fileName)
 				.then( rs => rs.text())
 				.catch (error => {
@@ -265,6 +265,8 @@
 				let showcount = $('#showcount').val();
 				let message = "無資料";
 				
+				let productETags = {};  // 用物件存每個 productId 的 ETag
+				
 				$("#jsGrid").jsGrid({
 				    width: "100%",
 				    height: "auto",
@@ -291,8 +293,10 @@
 					{
 					    loadData: function(filter) {
 					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    	const queryProductUrl = /*[[@{/product/queryProduct}]]*/'';
-					    	return queryajax(queryProductUrl, 'POST', requestData);
+					    	const queryProductUrl = /*[[@{/Product/queryProduct}]]*/'';
+					    	const resp = queryajax(queryProductUrl, 'POST', requestData);
+					    	console.log('resp: ', resp);
+					    	return resp;
 					    }
 					},
 					fields: [
@@ -311,11 +315,25 @@
 				                	.on("click", function() {
 				                		$('#updateProductId').val(item.productId);
 				                		setShowItem('UPDATE');
-				                		const getProductUrl = /*[[@{/product/getProduct/}]]*/'';
+				                		const getProductUrl = /*[[@{/Product/getProduct/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: getProductUrl + item.productId,
-				                		    success: function (data) {
+				                		    /*beforeSend: function(xhr) {
+				                	            if (productETags[item.productId]) {
+				                	                xhr.setRequestHeader("If-None-Match", productETags[item.productId]);
+				                	            }
+				                	        },*/
+				                	        cache:true,
+				                		    success: function (data, textStatus, jqXHR) {
+				                		    	//let etag = jqXHR.getResponseHeader("ETag");
+				                	            //if (etag) productETags[item.productId] = etag;
+
+				                	            /*if (jqXHR.status === 304) {
+				                	                console.log("資料沒變，不需要更新前端");
+				                	                return;
+				                	            }*/
+				                	            
 				                		    	$('#updateProductName').val(data["productName"]);
 						                		$('#updatePrice').val(data["price"]);
 						                		$('#updateCost').val(data["cost"]);

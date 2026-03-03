@@ -1,7 +1,5 @@
 package com.vendingmachine.backend.vo;
 
-import javax.persistence.Column;
-
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.entity.Purchase;
 
 @Repository

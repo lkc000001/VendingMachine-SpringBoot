@@ -1,0 +1,31 @@
+<div class="container" >
+  <div class="row">
+    <ng-container *ngFor="let item of productList$ | async; let i = index" >
+      <div class=" col-4">
+        <div class="card border-primary paddingMargin_10">
+          <span class="cardTitle">{{ item.productName }}</span>
+
+          <img [src]="imageUrl + item.image" class="cardImage" alt="..."/>
+
+          <div class="card-body pb-1">
+            <div class="row">
+              <span class="col-6 cardText" >價格: {{ item.price }}</span>
+              <span class="col-6 cardText" >庫存: {{ item.stock }}</span>
+            </div>
+          </div>
+          <div class="card-body pt-1">
+            <div class="row">
+              <span class="col-5 cardText">購買數量：</span>
+              <input type="number" id="{{ buyQuantityNameList[i] }}" value=0 class="col-6 cardText" [disabled]="item.stock <= 0"/>
+            </div>
+          </div>
+
+          <div *ngIf="item.stock <= 0" class="btn btn-danger cardBtn customLink">庫存不足</div>
+          <div *ngIf="item.stock > 0" class="btn btn-primary cardBtn" (click)="addShoppingCart(i)">加入購物車</div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <app-pagination [maxPage]="maxPage"></app-pagination>
+</div>
+

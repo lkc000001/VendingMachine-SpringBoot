@@ -53,7 +53,12 @@
 			                    <div>
 			                    	<label>
 			                            <span class="text" >群　　組：</span>
-			                            <input type="text" id="groupName" name="groupName">
+			                            <select id="groupId" name="groupId">
+			                            	<option value="" selected></option>
+			                            	<th:block th:each="group : ${GroupNameSelectData}">
+										    	<option th:value="${group.id}" th:text="${group.name}"></option>
+										    </th:block>
+										</select>
 			                        </label>
 			                    	&nbsp;&nbsp;&nbsp;
 			                    	<label>
@@ -132,7 +137,12 @@
 					                <div class="search-block-line">
 				                        <label>
 				                            <span class="text">群　　組：</span>
-				                            <input type="text" id="updateGroupName" name="groupName">
+				                            <select id="updateGroupId" name="groupId">
+			                            	<option value="" selected></option>
+			                            	<th:block th:each="group : ${GroupNameSelectData}">
+										    	<option th:value="${group.id}" th:text="${group.name}"></option>
+										    </th:block>
+										</select>
 				                        </label>
 					                </div>
 					                <div class="search-block-line">
@@ -202,7 +212,7 @@
 			
 			function dodelete() {
 				let userId = $('#updateUserId').val();
-				const deleteUrl = /*[[@{/appUser/delete/}]]*/'';
+				const deleteUrl = /*[[@{/AppUser/delete/}]]*/'';
            		$.ajax({
 					url: deleteUrl + userId,
 					type: 'DELETE',
@@ -218,6 +228,8 @@
 				dojsGrid();
 			}
 			
+			let groupNameSelectData = /*[[${GroupNameSelectData}]]*/'';
+
 			//顯示查詢結果
 			function dojsGrid() {
 				let showcount = $('#showcount').val();
@@ -257,7 +269,7 @@
 						{ name: "name", type: "text", width: 80 , title:"員工姓名" },
 						{ name: "account", type: "text", width: 80 ,title: "帳號"},
 						{ name: "accountId", type: "text", width: 80 , title:"員工編號" },
-						{ name: "groupName", type: "text", width: 80, title:"群組"},
+						{ name: "groupId", type: "select", items: groupNameSelectData, valueField: "id", textField: "name", width: 60, title:"群組", sorting: false },
 						{ name: "branch", type: "text", width: 80, title:"部門" },
 						{ name: "enabled", type: "select", items: selectEnabled, valueField: "id", textField: "name", width: 60, title:"狀態", sorting: false },
 						{ 
@@ -266,7 +278,7 @@
 				                	.on("click", function() {
 				                		$('#updateUserId').val(item.userId);
 				                		setShowItem('UPDATE');
-				                		const getAppUserUrl = /*[[@{/appUser/getAppUser/}]]*/'';
+				                		const getAppUserUrl = /*[[@{/AppUser/getAppUser/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: getAppUserUrl + item.userId,
@@ -275,7 +287,7 @@
 						                		$('#updateAccount').val(data["account"]);
 						                		$('#updateAccountId').val(data["accountId"]);
 						                		$('#updateName').val(data["name"]);
-						                		$('#updateGroupName').val((data["groupName"]));
+						                		$('#updateGroupId').val((data["groupId"]));
 						                		$('#updateBranch').val((data["branch"]));
 				                		    }
 				                	    });
@@ -287,7 +299,7 @@
 							itemTemplate: function(_, item) {
 				                return $('<button class="perm-btn-color">').text("權限")
 				                	.on("click", function() {
-				                		const permissionsPath = /*[[@{/permissions/user/}]]*/ '';
+				                		const permissionsPath = /*[[@{/Permissions/user/}]]*/ '';
 				                		window.location.href = permissionsPath + item.userId;
 				                	});
 				          	}, sorting: false, width: 60

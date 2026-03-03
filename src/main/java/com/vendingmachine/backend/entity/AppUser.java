@@ -34,8 +34,8 @@ public class AppUser implements Serializable {
 	@Column(name = "branch")
 	private String branch;
 	
-	@Column(name = "groupname")
-	private String groupName;
+	@Column(name = "groupid")
+	private String groupId;
 	
 	@Column(name = "accountid")
 	private Integer accountId;

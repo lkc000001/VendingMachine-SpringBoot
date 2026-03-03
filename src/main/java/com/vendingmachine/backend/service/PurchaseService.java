@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 
 import com.vendingmachine.backend.entity.Purchase;
 import com.vendingmachine.backend.vo.PurchaseVo;
+import com.vendingmachine.enums.SaveFunc;
 
 public interface PurchaseService {
 	
@@ -11,5 +12,5 @@ public interface PurchaseService {
 	
 	Purchase getPurchase(Long id);
 	
-	String save(PurchaseVo purchaseVo, String func);
+	String save(PurchaseVo purchaseVo, SaveFunc func);
 }

@@ -226,7 +226,7 @@
 				                	.on("click", function() {
 				                		$('#updatePurchaseIdId').val(item.id);
 				                		setShowItem('UPDATE');
-				                		const funcurl = /*[[@{/purchase/getPurchase/}]]*/'';
+				                		const funcurl = /*[[@{/Purchase/getPurchase/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: funcurl  + item.id,
@@ -291,7 +291,7 @@
 			}
 			
 			function getProductName(productId) {
-				const funcurl = /*[[@{/product/getProduct/}]]*/'';
+				const funcurl = /*[[@{/Product/getProduct/}]]*/'';
 				
 				const resp = $.ajax({
         		    type: "GET",

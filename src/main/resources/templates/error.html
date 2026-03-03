@@ -12,7 +12,11 @@
 	        <th:block th:insert="/util/header :: header"></th:block>
 	        
 	        <!-- 主選單 -->
-	        <th:block th:insert="/util/navBar :: navBar"></th:block>
+	        <nav class="mt-2 nav-collapse-hide-child">
+		        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="listHtml">
+		            
+            	</ul>
+		    </nav>
 	
 		    <div class="content-wrapper">
 			    <div class="main-content">
@@ -20,11 +24,11 @@
 						<span class="title-text">ERROR</span>
 		             </div>
 					<div class="errorMsg" id="errorMsg"> 
-						您尚未有此功能之權限。<BR>如需開通權限，請洽管理人員。
+						您尚未登入，或者閒置超過30分鐘。<BR>請按確認鍵自動轉至登入頁面，重新登入!!
 					</div>
 					
 					<div class="pagebtn">
-						<div id = "returnbtn" class="btn newbtn-gray" onclick="doreturn();">返回</div>
+						<a th:href="@{/login/}" class=" btn newbtn-gray">返回</a>
 					</div>
 			
 				</div>
@@ -35,10 +39,6 @@
 	    <!-- 載入TS -->
 	    <th:block th:insert="/util/utilJsCss :: utilJs"></th:block>
 		<script language="JavaScript" type="text/JavaScript">
-			//回上一頁
-			function doreturn() {
-				history.back();
-			}
 			
 		</script>
 	</body>

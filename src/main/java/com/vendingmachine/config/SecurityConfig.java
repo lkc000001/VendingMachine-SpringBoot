@@ -22,7 +22,7 @@ public class SecurityConfig {
 	PasswordEncoder password() {
 		return new BCryptPasswordEncoder(); // 將密碼進行加密(每次加密資料並不會相同) 強度可以輸入 4~31
 	}
-	
+
 	//驗證碼
 	@Bean
     public ImageCodeValidateFilter imageCodeValidateFilter() {
@@ -50,7 +50,8 @@ public class SecurityConfig {
 	public WebSecurityCustomizer ignoringCustomizer() {
 		return web-> web
 				.ignoring()
-				.antMatchers("/", "/login/**", "/component/**", "/images/**", "/code/image", "/frontend/**");
+				.antMatchers("/", "/login/**", "/component/**", "/images/**", "/code/image", 
+							 "/frontend/**", "/allImage/**");
 	}
       
 	// 配置 HTTP 安全性
@@ -71,12 +72,13 @@ public class SecurityConfig {
     	 http.authorizeRequests()
      		 //.anyRequest().authenticated() // 所有請求都要驗證
     	 	 .antMatchers("/frontend/**").permitAll()
-			 .antMatchers("/appUser/**").hasRole("appUser")
-			 .antMatchers("/function/**").hasRole("function")
-			 .antMatchers("/product/**").hasRole("product")
-			 .antMatchers("/purchase/**").hasRole("purchase")
-			 .antMatchers("/backend/member/**").hasRole("member")
-			 .antMatchers("/backend/memberorder/**").hasRole("memberorder")
+//			 .antMatchers("/appUser/**").hasRole("appUser")
+//			 .antMatchers("/function/**").hasRole("function")
+//			 .antMatchers("/product/**").hasRole("product")
+//			 .antMatchers("/purchase/**").hasRole("purchase")
+//			 .antMatchers("/backend/member/**").hasRole("member")
+//			 .antMatchers("/backend/memberorder/**").hasRole("memberorder")
+//			 .antMatchers("/backend/wallet/**").hasRole("wallet")
  			 .and()
 			 .userDetailsService(springUserService())
 			 .csrf().disable();

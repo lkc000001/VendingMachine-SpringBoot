@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta name="viewport" content="width=device-width" />
-		<title>會員訂單資料查詢</title>
+		<title>電子錢包</title>
 		<!-- 載入CSS -->
 		<th:block th:insert="/util/utilJsCss :: utilCss"></th:block>
 	</head>
@@ -131,7 +131,7 @@
 					{
 					    loadData: function(filter) {
 				    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-				    		const queryWalletUrl = /*[[@{/backend/wallet/queryWallet}]]*/'';
+				    		const queryWalletUrl = /*[[@{/Bbackend/Wallet/queryWallet}]]*/'';
 				    		return queryajax(queryWalletUrl, 'POST', requestData);
 					    }
 					},
@@ -160,7 +160,7 @@
 				                return $('<button class="update-btn-color">').text("購買明細")
 				                	.on("click", function() {
 				                		$('#updateModalTitle').val('扣款詳細資料');
-				                		const queryMemberOrderUrl = /*[[@{/backend/memberorder/queryMemberOrderByWalletId/}]]*/'';
+				                		const queryMemberOrderUrl = /*[[@{/Backend/MemberOrder/queryMemberOrderByWalletId/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: queryMemberOrderUrl  + item.walletId,

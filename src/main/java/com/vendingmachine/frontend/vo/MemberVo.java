@@ -1,15 +1,7 @@
 package com.vendingmachine.frontend.vo;
 
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vendingmachine.backend.vo.JSGridFilter;
 
 import lombok.Data;

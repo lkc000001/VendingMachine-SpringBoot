@@ -1,0 +1,66 @@
+
+
+<div class="container" >
+  <div class="row">
+    <div class="search-block-line-title">
+      <div class="showright">
+        顯示筆數：
+        <select>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class=" col-1">
+      項次
+    </div>
+    <div class=" col-1">
+      產品編號
+    </div>
+    <div class=" col-2">
+      產品圖片
+    </div>
+    <div class=" col-4">
+      產品名稱
+    </div>
+    <div class=" col-1">
+      單價
+    </div>
+    <div class=" col-1">
+      購買數量
+    </div>
+    <div class=" col-2">
+      金額
+    </div>
+  </div>
+    <ng-container *ngFor="let item of shoppingCartList$ | async; let i = index" >
+      <div class="row">
+        <div class=" col-1">
+          {{ i + 1 }}
+        </div>
+        <div class=" col-1">
+          {{ item.productId }}
+        </div>
+        <div class=" col-2">
+          <img [src]="imageUrl + item.productId" class="cardImage" alt="..."/>
+        </div>
+        <div class=" col-4">
+          {{ item.productName }}
+        </div>
+        <div class=" col-1">
+          {{ item.productPrice }}
+        </div>
+        <div class=" col-1">
+          {{ item.buyQuantity }}
+        </div>
+        <div class=" col-2">
+          {{ item.total }}
+        </div>
+      </div>
+    </ng-container>
+
+</div>

@@ -1,7 +1,6 @@
 package com.vendingmachine.backend.service.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.repositories.AppUserRepository;
 import com.vendingmachine.backend.service.AppUserService;
 import com.vendingmachine.backend.vo.AppUserVo;
-import com.vendingmachine.backend.vo.JSGridReturnData;
-import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 
@@ -33,7 +30,7 @@ public class AppUserServiceImpl implements AppUserService {
 		checkData(appUserVo);
 		Page<AppUser> appUsers = appUserRepository.queryAppUser(appUserVo.getUserId(),
 																appUserVo.getBranch(),
-																appUserVo.getGroupName(),
+																appUserVo.getGroupId(),
 																appUserVo.getAccountId(),
 																appUserVo.getAccount(),
 																appUserVo.getName(),
@@ -102,9 +99,9 @@ public class AppUserServiceImpl implements AppUserService {
 		if(branch != null) {
 			appUserVo.setBranch(StringUtil.addPercentage(branch, 3));
 		}
-		String groupName = appUserVo.getGroupName();
+		String groupName = appUserVo.getGroupId();
 		if(groupName != null) {
-			appUserVo.setGroupName(StringUtil.addPercentage(groupName, 3));
+			appUserVo.setGroupId(StringUtil.addPercentage(groupName, 3));
 		}
 		String account = appUserVo.getAccount();
 		if(account != null) {

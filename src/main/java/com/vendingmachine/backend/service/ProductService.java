@@ -1,5 +1,6 @@
 package com.vendingmachine.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -21,4 +22,6 @@ public interface ProductService {
 	String save(ProductVo productVo, String func);
 	
 	List<String> getProductClassify();
+	
+	LocalDateTime getLastUpdateTime(Long id);
 }

@@ -2,8 +2,6 @@ package com.vendingmachine.backend.vo;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;

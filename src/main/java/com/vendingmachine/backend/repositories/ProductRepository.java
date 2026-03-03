@@ -1,11 +1,13 @@
 package com.vendingmachine.backend.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.vendingmachine.backend.entity.Product;
@@ -40,4 +42,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 					"WHERE enabled = 1 ",
 		nativeQuery = true)
 	List<String> getProductClassify();
+	
+	@Query(	value = "SELECT createtime " +
+					"FROM [PRODUCT] " +
+					"WHERE id = :id ",
+			nativeQuery = true)
+	LocalDateTime getLastUpdateTime(@Param("id") Long id);
 }

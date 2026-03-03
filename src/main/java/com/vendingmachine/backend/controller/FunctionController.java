@@ -23,7 +23,7 @@ import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
-@RequestMapping(value = "/function")
+@RequestMapping(value = "/Function")
 public class FunctionController {
 	
 	@Autowired
@@ -34,7 +34,7 @@ public class FunctionController {
 	@GetMapping(path = "/")
     public String index(Model model) {
 		model.addAttribute("selectFunctionType", functionService.findByFunctionType());
-		model.addAttribute("selectFunction", "function");
+		model.addAttribute("selectFunction", "Function");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;

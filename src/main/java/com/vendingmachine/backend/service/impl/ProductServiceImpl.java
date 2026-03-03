@@ -6,6 +6,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.repositories.ProductRepository;
 import com.vendingmachine.backend.service.ProductService;
-import com.vendingmachine.backend.vo.JSGridReturnData;
 import com.vendingmachine.backend.vo.ProductClassifyProjection;
 import com.vendingmachine.backend.vo.ProductVo;
-import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
 import com.vendingmachine.util.ValidateUtil;
@@ -144,6 +143,11 @@ public class ProductServiceImpl implements ProductService {
 		return classifyList;
 	}
 	
+	@Override
+	public LocalDateTime getLastUpdateTime(Long id) {
+		return productRepository.getLastUpdateTime(id);
+	}
+
 	private void checkData(ProductVo productVo) {
 
 		if(validateUtil.isNotBlank(productVo.getProductName())) {
@@ -167,7 +171,4 @@ public class ProductServiceImpl implements ProductService {
 		productVo.setSortField(sortField);
 	}
 
-	
-
-	
 }

@@ -1,0 +1,35 @@
+<div class="whitebg">
+  <div class="logo">
+      <img src="" alt=""/>
+  </div>
+  <div class="s-title">
+      <span class="s-txt">登入系統</span>
+  </div>
+  <form >
+    <div id="inputdiv">
+      <div class="inputblock">
+        <label>使用者名稱：</label>
+        <input type="text" name="memberId" [(ngModel)]="member.memberId" #memberId="ngModel" minlength="3" required />
+      </div>
+      <div>
+        <div *ngIf="memberId.invalid && (memberId.dirty || memberId.touched)" class="error2">
+          <span *ngIf="memberId.errors?.['required']" class="span2">此欄位必填</span>
+          <span *ngIf="memberId.errors?.['minlength']" class="span2">至少輸入 3 個字</span>
+        </div>
+      </div>
+      <div class="inputblock">
+          <label>使用者密碼：</label>
+          <input type="password" name="memberPassword" [(ngModel)]="member.memberPassword" required />
+      </div>
+    </div>
+    <span class="error" >
+      {{ error }}
+      <br *ngIf="error === ''"/>
+    </span>
+    <div class="loginbtn">
+        <button type='button' class="btn lg newbtn-gray">清除</button>
+        &nbsp;
+        <button type="submit" class="btn lg newbtn-yellow" (click)="login()">登入</button>
+    </div>
+  </form>
+</div>

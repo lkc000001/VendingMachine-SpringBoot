@@ -21,6 +21,7 @@ class pagination extends Component {
             case ">>":
                 page = this.props.maxPage.length;
                 break;
+            default:
         }
         this.oldPage = page;
         this.props.queryProduct(page);
@@ -35,6 +36,9 @@ class pagination extends Component {
                             <a className="page-link">
                                 <span onClick={ this.pageOnClick }>{'<<'}</span>
                             </a>
+                            <button type="button" className="page-link cursorPointer" onClick={() => this.pageOnClick('first')} aria-label="First page">
+                                {'<<'}
+                            </button>
                         </li>
                         <li className="page-item cursorPointer displayInline">
                             <a className="page-link">

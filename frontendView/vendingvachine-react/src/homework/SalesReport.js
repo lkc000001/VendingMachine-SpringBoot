@@ -64,6 +64,7 @@ class SalesReport extends Component {
             case ">>":
                 page = this.state.maxPage.length;
                 break;
+            default:
         }
         this.oldPage = page;
         this.setState({
@@ -109,13 +110,13 @@ class SalesReport extends Component {
                 </table>
                 <hr/>                
                 <div>   
-                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage == 1  ? true : false } >{'<<'}</button>
-                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage == 1  ? true : false } >{'<'}</button>
+                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage === 1  ? true : false } >{'<<'}</button>
+                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage === 1  ? true : false } >{'<'}</button>
                     { maxPage.map( ( num, index) =>
                         <button onClick={ this.pageOnClick } key={ index } className={ this.oldPage == (index + 1)  && 'buttonActive'}  >{ index + 1 }</button>
                     )}
-                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage == maxPageLenth ? true : false } >{'>'}</button>
-                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage == maxPageLenth ? true : false } >{'>>'}</button>
+                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage === maxPageLenth ? true : false } >{'>'}</button>
+                    <button onClick={ this.pageOnClick }  disabled={ this.oldPage === maxPageLenth ? true : false } >{'>>'}</button>
                 </div>
             </div>
         );

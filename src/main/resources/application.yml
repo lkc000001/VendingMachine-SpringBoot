@@ -18,7 +18,7 @@ spring:
   profiles:
     active: local
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -33,13 +33,13 @@ spring:
     multipart:
       max-file-size: 10MB
       location: c:/data
-
+#sqlplus VENDINGMACHINE/87654321@localhost:1521/xe
 springboot:
   datasource:
     oracle:
       jdbc-url: jdbc:oracle:thin:@localhost:1521:xe
       username: VENDINGMACHINE
-      password: 12345678
+      password: 87654321
       driverClassName: oracle.jdbc.driver.OracleDriver
       maximumPoolSize: 2
       connectionTimeout: 30000
@@ -54,4 +54,4 @@ springboot:
 file:
   upload:
     path: c:/data/image/
-    relative: /image/**
+    relative: /allImage/**

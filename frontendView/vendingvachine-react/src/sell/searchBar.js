@@ -11,7 +11,7 @@ const getProductClassifyUrl  = 'http://localhost:8086/VendingMachine/frontend/pr
 
 const SearchBar = (props) => {
 
-    const { searchString, setSearchString, searchProduct, searchClassify, setSearchClassify, onChangeClassify} = props.searchBarParameter;
+    const { searchString, setSearchString, searchProduct, searchClassify, setSearchClassify, onChangeClassify, queryProduct1}  = props.searchBarParameter;
 
     const [classifyList, setClassifyList] = useState([]);
 
@@ -20,7 +20,7 @@ const SearchBar = (props) => {
             if(classifyList.length <=0) {
                 classifyListresp();
             }
-        },[]
+        },[ classifyList.length ]
     );
 
     //依分清單資料
@@ -33,8 +33,8 @@ const SearchBar = (props) => {
     }
 
     const changeClassify = (e) => {
-        setSearchClassify( e.target.value );  
-        onChangeClassify();
+        //setSearchClassify( e.target.value );  
+        onChangeClassify(e.target.value);
     }
 
     const changeSearchProduct = () => {
@@ -46,6 +46,10 @@ const SearchBar = (props) => {
         setSearchClassify('');  
         setSearchString('');
         searchProduct();
+    }
+
+    const queryProduct123 = () => {
+        queryProduct1();
     }
 
     return (
@@ -78,6 +82,7 @@ const SearchBar = (props) => {
                         <Col sm="4">
                             <Button variant="success" onClick={ changeSearchProduct }>搜尋</Button>
                             <Button className='ml-2' variant="secondary"  onClick={ clserSearchProduct }>清除</Button>
+                            <Button onClick={ queryProduct123 }>搜尋123</Button>
                         </Col>
                     </Row>
                 </Col>

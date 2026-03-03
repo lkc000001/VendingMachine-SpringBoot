@@ -40,11 +40,6 @@ const Header = forwardRef((props, cRef) => {
         show: false
     });
 
-    //進頁面檢查是否已登入
-    useEffect(() => {
-        checkLogin();
-    }, [ isLogin, countVer ]);
-
     //顯示login頁面
     const showLogin = () => {
         setShowMsg({
@@ -141,6 +136,12 @@ const Header = forwardRef((props, cRef) => {
             }
         }
     }
+
+    //進頁面檢查是否已登入
+    useEffect(() => {
+        checkLogin();
+    }, [ isLogin, countVer ]);
+
     //登出
     const logout = async () => {
         const checkLoginResp = await axios.get("http://localhost:8086/VendingMachine/frontend/logout", { withCredentials: true })

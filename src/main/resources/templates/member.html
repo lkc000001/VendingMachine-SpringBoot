@@ -182,7 +182,7 @@
 					{
 					    loadData: function(filter) {
 				    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-				    		const queryMemberUrl = /*[[@{/backend/member/queryMember}]]*/'';
+				    		const queryMemberUrl = /*[[@{/Backend/Member/queryMember}]]*/'';
 				    		return queryajax(queryMemberUrl, 'POST', requestData);
 					    }
 					},
@@ -201,7 +201,7 @@
 				                		$('#_method').val('PUT');
 				                		$('#updateModalTitle').val('修改會員資料');
 				                		$('#memberIdDvi').css("display", "block");
-				                		const getMemberUrl = /*[[@{/backend/member/getMember/}]]*/'';
+				                		const getMemberUrl = /*[[@{/Backend/Member/getMember/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: getMemberUrl  + item.memberId,

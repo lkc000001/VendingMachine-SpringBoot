@@ -1,0 +1,8 @@
+{
+  "/VendingMachine": {
+    "target": "http://localhost:8086",
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "secure": true
+  }
+}

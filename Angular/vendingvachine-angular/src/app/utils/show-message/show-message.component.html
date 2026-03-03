@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ title }}</h4>
+</div>
+<div class="modal-body">
+  <!-- 登入 -->
+  <app-login *ngIf="model === 'login'"></app-login>
+  <!-- 顯示訊息 -->
+  <ng-container *ngIf="model === 'message'">
+    {{ body }}
+  </ng-container>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
+</div>

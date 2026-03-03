@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../CSS/sell.css';
 import Header from '../util/header';
@@ -19,19 +19,13 @@ const Sell = () => {
 
     const [ searchString, setSearchString] = useState('');
     const [ searchClassify, setSearchClassify] = useState('');
-    const [ searchVar, setSearchVar] = useState(0);
-
-    //一進入頁面顯示產品資料
-    useEffect(
-        () => {
-            queryProduct(1);
-        },[ searchVar ]
-    );
+    //const [ searchVar, setSearchVar] = useState(0);
+    const [ currentEtag, setCurrentEtag] = useState('');
 
     const headerRef = useRef(null);
 
     //依分頁取得商品資料
-    const queryProduct = async (pageIndex) => {
+    const queryProduct = useCallback(async (pageIndex) => {
         const apiUrl  = 'http://localhost:8086/VendingMachine/frontend/product/queryProduct';
         const requestData = {
             pageIndex: pageIndex,
@@ -41,17 +35,47 @@ const Sell = () => {
             classify: searchClassify
         };
 
-        const { data } = await axios.post(apiUrl, requestData, {timeout: 3000})
+        /*const { data } = await axios.post(apiUrl, requestData, {timeout: 3000})
         .then(rs => rs)
-        .catch(error => { console.log(error); });
+        .catch(error => { console.log(error); });*/
+        console.log("currentEtag1:", currentEtag);
+        const response = await axios.post(
+            apiUrl,
+            requestData,
+            {
+                timeout: 3000,
+                headers: {
+                'If-None-Match': currentEtag   // 如果要送舊的 ETag
+                },
+                validateStatus: function (status) {
+                    return status === 200 || status === 304;
+                }
+            }
+            );
+
+        if (response.status === 304) {
+            console.log("資料沒變，不更新");
+            return;
+        }
+        const data = response.data;
+        //currentEtag = response.headers['etag'];
+        setCurrentEtag(response.headers['etag']);
+        console.log("currentEtag2:", currentEtag);
 
         setState( state => ({
             products: data.data,
             maxPage: Array.from({ length: data.maxPage }),
             pageIndex: pageIndex
         }));
-    }
+    }, [searchString, searchClassify, currentEtag]);
 
+    //一進入頁面顯示產品資料
+    useEffect(
+        () => {
+            queryProduct(1);
+        },[ queryProduct ]
+    );
+    
     const showMessage = (title, message) => {
         headerRef.current.showMessage(title, message);
     }
@@ -65,12 +89,16 @@ const Sell = () => {
     }
 
     const searchProduct = () => {
-        setSearchVar(searchVar + 1);
+       queryProduct(1);
     }
 
-    const onChangeClassify = () => {
+    const onChangeClassify = (value) => {
+        setSearchClassify(value);
         setSearchString('');
-        setSearchVar(searchVar + 1);
+    }
+
+    const queryProduct1 = () => {
+        queryProduct(1);
     }
 
     //傳至SearchBar參數
@@ -80,7 +108,8 @@ const Sell = () => {
         searchProduct,
         searchClassify,
         setSearchClassify,
-        onChangeClassify
+        onChangeClassify,
+        queryProduct1
     }
     
     return (
@@ -90,7 +119,7 @@ const Sell = () => {
                             ref={ headerRef } />
                     <div className="content-wrapper">
                         <div className="main-content">
-                        <SearchBar searchBarParameter = { searchBarParameter }/>
+                        <SearchBar searchBarParameter = { searchBarParameter } />
                         { products.map( ( product, index) =>
                             <Card key={ product.productId } product = { product } 
                                                             showMessage = { showMessage }

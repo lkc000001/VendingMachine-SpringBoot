@@ -2,11 +2,6 @@ package com.vendingmachine.frontend.vo;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vendingmachine.backend.vo.JSGridFilter;

@@ -1,7 +1,6 @@
 package com.vendingmachine.backend.service.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,9 @@ import com.vendingmachine.backend.entity.Product;
 import com.vendingmachine.backend.entity.Purchase;
 import com.vendingmachine.backend.repositories.ProductRepository;
 import com.vendingmachine.backend.repositories.PurchaseRepository;
-import com.vendingmachine.backend.service.ProductService;
 import com.vendingmachine.backend.service.PurchaseService;
-import com.vendingmachine.backend.vo.JSGridReturnData;
 import com.vendingmachine.backend.vo.PurchaseVo;
-import com.vendingmachine.exception.QueryNoDataException;
+import com.vendingmachine.enums.SaveFunc;
 import com.vendingmachine.exception.TimeFormatException;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.ValidateUtil;
@@ -35,8 +32,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 	
 	@Autowired
 	private ValidateUtil validateUtil;
-	
-	private final String NONE = "";
 	
 	@Override
 	public Page<Purchase> queryPurchase(PurchaseVo purchaseVo) {
@@ -64,12 +59,12 @@ public class PurchaseServiceImpl implements PurchaseService {
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public String save(PurchaseVo purchaseVo, String func) {
+	public String save(PurchaseVo purchaseVo, SaveFunc func) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		Purchase purchase = BeanCopyUtil.copyBean(purchaseVo, Purchase.class);
 
-		if(func.equals("新增")) {
+		if(SaveFunc.ADD == func) {
 			purchase.setCreateTime(new Date());
 			purchase.setCreateUser(username);
     	} else {
@@ -78,7 +73,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     	}
 		Purchase purchaseSaveResp = purchaseRepository.save(purchase);
 		if(purchaseSaveResp == null) {
-			return func +"採購單失敗";
+			return func.getFunc() +"採購單失敗";
 		}
 		
 		Long productId = purchaseVo.getProductId();
@@ -95,9 +90,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 			product.setCost(averageCost);
 			product.setStock(newStock);
 		} else {
-			return func +"更新庫存失敗";
+			return func.getFunc() +"更新庫存失敗";
 		}
-    	return func +"採購單成功";
+    	return func.getFunc() +"採購單成功";
 	}
 	
 	private void checkData(PurchaseVo purchaseVo) {

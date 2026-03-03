@@ -30,17 +30,26 @@ $(function(){
     }
 });
 
-function queryajax(apiurl, methodType, requestData) {
+function queryajax(apiurl, methodType, requestData, eTag) {
 	return $.ajax({
 		    type: methodType,
 		    url: apiurl,
 		    dataType: "json",
 		    contentType:"application/json; charset=utf-8",
+		    headers: {
+		        'If-None-Match': eTag // 在此設定ETag值
+		    },
 		    data: JSON.stringify(requestData),
-		    cache:false,
-		    success: function (data){
+		    //cache:false,
+		    success: function (data, textStatus, jqXHR){
+				console.log(data.code)
+				if(data.code === 'E003') {
+					window.location.href = /*[[@{/error/}]]*/ '';
+				}
 				$('#itemsCountDiv').css("display", "block");
 				$('#itemsCount').text(data.itemsCount);
+				var etag = jqXHR.getResponseHeader('ETag');
+        		console.log('ETag:', etag);
 		    },
 		    error: function (error) {
 				console.log(error);

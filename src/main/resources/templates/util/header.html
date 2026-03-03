@@ -26,7 +26,7 @@
 		        <div class="Competence" id="Competence">
 		            <div>
 		                <div class="Competence-line" >分行/部門代碼：<span th:if="${session.appUser != null}" th:text="${session.appUser.branch}" /></div>
-		                <div class="Competence-line" >群組名稱：<span th:if="${session.appUser != null}" th:text="${session.appUser.groupName}" /></div>
+		                <div class="Competence-line" >群組名稱：<span th:if="${session.appUser != null}" th:text="${session.appUser.groupId}" /></div>
 		                <div class="Competence-line" >帳號名稱：<span th:if="${session.appUser != null}" th:text="${session.appUser.account}" /></div>
 		
 		                <a th:href="@{/logout}" class=" btn newbtn-gary Competence-btn">登出</a>

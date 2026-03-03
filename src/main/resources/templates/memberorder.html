@@ -180,7 +180,7 @@
 					{
 					    loadData: function(filter) {
 				    		const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-				    		const queryMemberOrderUrl = /*[[@{/backend/memberorder/queryMemberOrderList}]]*/'';
+				    		const queryMemberOrderUrl = /*[[@{/Backend/MemberOrder/queryMemberOrderList}]]*/'';
 				    		return queryajax(queryMemberOrderUrl, 'POST', requestData);
 					    }
 					},
@@ -205,7 +205,7 @@
 				                	.on("click", function() {
 				                		$('#updateOrderId').val(item.orderId);
 				                		$('#updateModalTitle').val('會員資料詳細資料');
-				                		let getMemberOrderUrl = /*[[@{/backend/memberorder/getMemberOrder/}]]*/'';
+				                		let getMemberOrderUrl = /*[[@{/Backend/MemberOrder/getMemberOrder/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: getMemberOrderUrl  + item.orderId,

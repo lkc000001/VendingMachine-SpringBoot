@@ -19,11 +19,12 @@ import com.vendingmachine.backend.entity.Purchase;
 import com.vendingmachine.backend.service.PurchaseService;
 import com.vendingmachine.backend.vo.JSGridReturnData;
 import com.vendingmachine.backend.vo.PurchaseVo;
+import com.vendingmachine.enums.SaveFunc;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
-@RequestMapping(value = "/purchase")
+@RequestMapping(value = "/Purchase")
 public class PurchaseController {
 
 	@Autowired
@@ -33,7 +34,7 @@ public class PurchaseController {
 	
 	@GetMapping("/")
     public String index(Model model) {
-		model.addAttribute("selectFunction", "purchase");
+		model.addAttribute("selectFunction", "Purchase");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;
@@ -64,13 +65,13 @@ public class PurchaseController {
 	
 	@PostMapping(path = "/save")
     public String addPurchase(PurchaseVo purchaseVo) {
-		saveRespMsg = purchaseService.save(purchaseVo, "新增");
+		saveRespMsg = purchaseService.save(purchaseVo, SaveFunc.ADD);
 		return "redirect:./";
     }
 	
 	@PutMapping(path = "/save")
     public String updatePurchase(PurchaseVo purchaseVo) {
-		saveRespMsg = purchaseService.save(purchaseVo, "修改");
+		saveRespMsg = purchaseService.save(purchaseVo, SaveFunc.UPDATE);
 		return "redirect:./";
     }
 }

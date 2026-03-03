@@ -92,7 +92,7 @@
 							<h4 class="modal-title" id="updateModalTitle"></h4>
 						</div>
 						<div class="wordWrap modal-body" id="addDataDiv">
-							<form id="updateForm" name="updateForm" method="POST" th:action="@{/function/save}">
+							<form id="updateForm" name="updateForm" method="POST" th:action="@{/Function/save}">
 					            <input type="hidden" id="_method" name="_method" value="PUT" />
 					            <input type="hidden" id="createTime" name="createTime"/>
 					            <input type="hidden" id="createUser" name="createUser"/>
@@ -249,7 +249,7 @@
 					{
 					    loadData: function(filter) {
 					    	const requestData = Object.assign(filter, objectifyForm($("#queryForm").serializeArray()));
-					    	const queryFunctionUrl = /*[[@{/function/queryFunction}]]*/'';
+					    	const queryFunctionUrl = /*[[@{/Function/queryFunction}]]*/'';
 					    	return queryajax(queryFunctionUrl, 'POST', requestData);
 					    }
 					},
@@ -270,7 +270,7 @@
 				                		$('#_method').val('PUT');
 				                		$('#updateModalTitle').val('修改功能資料');
 				                		$('#functionIddvi').css("display", "block");
-				                		const getFunctionUrl = /*[[@{/function/getFunction/}]]*/'';
+				                		const getFunctionUrl = /*[[@{/Function/getFunction/}]]*/'';
 				                		$.ajax({
 				                		    type: "GET",
 				                		    url: getFunctionUrl  + item.functionId,
@@ -295,13 +295,6 @@
 						}
 					]
 				})
-			}
-		
-			//清除查詢資料
-			function doClear() {
-				$("#jsGrid").jsGrid("reset");
-				doClearData()
-				$("#jsGrid").children().remove();
 			}
 		
 			function doClearData() {

@@ -17,7 +17,7 @@ public class AppUserVo extends JSGridFilter {
 
 	private String branch;
 
-	private String groupName;
+	private String groupId;
 
 	private Integer accountId;
 

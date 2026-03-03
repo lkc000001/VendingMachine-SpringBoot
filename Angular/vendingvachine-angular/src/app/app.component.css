@@ -1,0 +1,10 @@
+.nav-title{
+  font-weight: 600;
+  color: #7f7f7f !important;
+  font-size: 25px;
+  line-height: 22px;
+}
+
+.navbar-nav{
+  align-items: center;
+}

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +21,7 @@ import com.vendingmachine.frontend.vo.MemberVo;
 import com.vendingmachine.frontend.vo.RespDataVo;
 import com.vendingmachine.util.BeanCopyUtil;
 
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000/", "http://localhost:4200"}, allowCredentials = "true")
 @RestController
 @RequestMapping(value = "/frontend")
 public class FrontendLoginController {

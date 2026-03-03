@@ -6,22 +6,29 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.vendingmachine.backend.entity.AppUser;
+import com.vendingmachine.backend.vo.PermissionsAppUserProjection;
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
 	AppUser findByAccount(String account);
 	
 	@Query(	value = "SELECT * " +
-			"FROM [USER] " +
-			"WHERE (?1 IS NULL OR userid = ?1) " +
-			"  AND ((?2 IS NULL OR ?2 = '') OR branch LIKE ?2) " + 
-			"  AND ((?3 IS NULL OR ?3 = '') OR groupname LIKE ?3) " + 
-			"  AND (?4 IS NULL OR accountid = ?4) " +
-			"  AND ((?5 IS NULL OR ?5 = '') OR account LIKE ?5) " +
-			"  AND ((?6 IS NULL OR ?6 = '') OR name LIKE ?6) " +
-			"  AND ((?7 IS NULL OR ?7 = '') OR enabled = ?7) ",
-		nativeQuery = true)
-	Page<AppUser> queryAppUser(Long userId, String branch, String groupName, Integer accountId,
+					"FROM [USER] " +
+					"WHERE (?1 IS NULL OR userid = ?1) " +
+					"  AND ((?2 IS NULL OR ?2 = '') OR branch LIKE ?2) " + 
+					"  AND ((?3 IS NULL OR ?3 = '') OR groupid LIKE ?3) " + 
+					"  AND (?4 IS NULL OR accountid = ?4) " +
+					"  AND ((?5 IS NULL OR ?5 = '') OR account LIKE ?5) " +
+					"  AND ((?6 IS NULL OR ?6 = '') OR name LIKE ?6) " +
+					"  AND ((?7 IS NULL OR ?7 = '') OR enabled = ?7) ",
+			nativeQuery = true)
+	Page<AppUser> queryAppUser(Long userId, String branch, String groupid, Integer accountId,
 							String account, String name, String enabled, Pageable pageable);
 
+	@Query(	value = "SELECT u.userId, u.account, u.accountId, u.name, u.branch, g.groupname " +
+					"FROM [USER] u " +
+					"LEFT JOIN [GROUP] g ON g.groupid = u.groupid  " + 
+					"WHERE u.userId = ?1 " ,
+			nativeQuery = true)
+	PermissionsAppUserProjection getAppUserById(Long userId);
 }

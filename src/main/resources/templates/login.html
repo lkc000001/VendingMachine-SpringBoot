@@ -68,6 +68,7 @@
     
     <script th:inline="javascript">
     	$(document).ready(function() {
+    		doClear();
     		//產生驗證碼
     		doauthCode();
     		let loginException = '[[${session.LoginException}]]';

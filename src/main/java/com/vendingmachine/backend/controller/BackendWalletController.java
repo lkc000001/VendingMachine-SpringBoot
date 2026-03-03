@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +23,7 @@ import com.vendingmachine.frontend.vo.WalletVo;
 import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
-@RequestMapping(value = "/backend/wallet")
+@RequestMapping(value = "/Bbackend/Wallet")
 public class BackendWalletController {
 
 	@Autowired
@@ -35,7 +33,7 @@ public class BackendWalletController {
 	
 	@GetMapping("/")
     public String index(Model model) {
-		model.addAttribute("selectFunction", "wallet");
+		model.addAttribute("selectFunction", "Wallet");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;

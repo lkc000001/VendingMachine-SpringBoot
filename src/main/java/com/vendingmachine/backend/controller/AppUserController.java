@@ -18,23 +18,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vendingmachine.backend.entity.AppUser;
 import com.vendingmachine.backend.service.AppUserService;
+import com.vendingmachine.backend.service.GroupService;
 import com.vendingmachine.backend.vo.AppUserVo;
 import com.vendingmachine.backend.vo.JSGridReturnData;
+import com.vendingmachine.backend.vo.SelectDataProjection;
 import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
-@RequestMapping(value = "/appUser")
+@RequestMapping(value = "/AppUser")
 public class AppUserController {
 	
 	@Autowired
 	AppUserService appUserService;
 	
+	@Autowired
+	GroupService groupService;
+	
 	private String saveRespMsg;
 	
 	@GetMapping("/")
     public String index(Model model) {
-		model.addAttribute("selectFunction", "appUser");
+		model.addAttribute("selectFunction", "AppUser");
+		model.addAttribute("GroupNameSelectData", groupService.getGroupNameSelectData());
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;

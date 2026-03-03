@@ -1,13 +1,6 @@
 package com.vendingmachine.frontend.service.impl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.vendingmachine.backend.entity.Product;
-import com.vendingmachine.backend.repositories.ProductRepository;
-import com.vendingmachine.backend.service.ProductService;
-import com.vendingmachine.backend.vo.JSGridReturnData;
-import com.vendingmachine.backend.vo.ProductVo;
-import com.vendingmachine.exception.QueryNoDataException;
+import com.vendingmachine.enums.SaveFunc;
 import com.vendingmachine.frontend.entity.Member;
-import com.vendingmachine.frontend.entity.MemberOrder;
-import com.vendingmachine.frontend.repositories.MemberOrderRepository;
 import com.vendingmachine.frontend.repositories.MemberRepository;
-import com.vendingmachine.frontend.service.MemberOrderService;
 import com.vendingmachine.frontend.service.MemberService;
-import com.vendingmachine.frontend.vo.MemberOrderVo;
 import com.vendingmachine.frontend.vo.MemberVo;
 import com.vendingmachine.util.BeanCopyUtil;
 import com.vendingmachine.util.StringUtil;
@@ -83,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
 		memberVo.setEnabled(enableStr);
 		
 		Member member = BeanCopyUtil.copyBean(memberVo, Member.class);
-		if(func.equals("新增")) {
+		if(SaveFunc.ADD.getFunc().equals(func)) {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String encodedPassword = encoder.encode(memberVo.getMemberPassword());
 			member.setMemberPassword(encodedPassword);

@@ -2,14 +2,11 @@ package com.vendingmachine.backend.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +20,10 @@ import com.vendingmachine.exception.QueryNoDataException;
 import com.vendingmachine.frontend.entity.Member;
 import com.vendingmachine.frontend.service.MemberService;
 import com.vendingmachine.frontend.vo.MemberVo;
-import com.vendingmachine.frontend.vo.RespDataVo;
 import com.vendingmachine.util.BeanCopyUtil;
 
 @Controller
-@RequestMapping(value = "/backend/member")
+@RequestMapping(value = "/Backend/Member")
 public class BackendMemberController {
 
 	@Autowired
@@ -37,7 +33,7 @@ public class BackendMemberController {
 	
 	@GetMapping("/")
     public String index(Model model) {
-		model.addAttribute("selectFunction", "member");
+		model.addAttribute("selectFunction", "Member");
 		if(saveRespMsg != null) {
 			model.addAttribute("saveRespMsg", saveRespMsg);
 			saveRespMsg = null;

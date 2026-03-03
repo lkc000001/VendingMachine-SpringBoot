@@ -1,0 +1,18 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" [class.customLink]="pageIndex !== 1" aria-label="Previous" (click)="changePage('min')">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item" *ngFor="let page of pagesArray" [class.active]="page === pageIndex">
+      <a *ngIf="page === pageIndex" class="page-link">{{ page }}</a>
+      <a *ngIf="page !== pageIndex" class="page-link customLink" (click)="changePage(page)">{{ page }}</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link customLink" [class.customLink]="pageIndex !== maxPage" aria-label="Next" (click)="changePage('max')">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
